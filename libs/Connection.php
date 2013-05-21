@@ -3,7 +3,7 @@
 * tworzy polaczenie z baza danych i przekazuje je do obiektu obslugo bazy danych
 * @author chajr <chajr@bluetree.pl>
 * @package db
-* @version 1.2.0
+* @version 1.3.0
 * @copyright chajr/bluetree
 * @final
 * Display <a href="http://sam.zoy.org/wtfpl/COPYING">Do What The Fuck You Want To Public License</a>
@@ -30,15 +30,13 @@ final class Libs_Connection
     /**
     * tworzy instancje obiektu mysqli i dokonuje polaczenie z baza danch
     * NAZWA default JEST UZYWANA DLA DOMYSLNEGO POLACZENIA Z BAZA DANYCH!!!!
-    * @param array $config tablica parametrow (host, username, pass, dbName, connName)
+    * @param array $config tablica parametrow (host, user, password, db_name, connection)
     * @param string $charset nazwa kodowa dla zestawu znakow (domyslnie UTF8)
     * @return boolean jesli wystapil blad w placzeniu zwraca FALSE i informacje o bledzie w wlasciwosci $err
-    * @example new mysql_connection_class(array('localhost', 'user', 'qw4@#$', 'baza', 'nowe_polaczenie'))
-    * @example new mysql_connection_class(array('localhost', 'user', 'qw4@#$', 'baza'))
-    * @example new mysql_connection_class(array('localhost', 'user', 'qw4@#$', 'baza'), 'LATIN1')
-    * @uses mysql_connection_class::$err
-    * @uses mysql_connection_class::$connections
-    * @uses mysql_connection_class::$defaultCharset
+    * @example new mysql_connection_class(array(host=>'localhost', user=>'user', password=>'qw4@#$', db_name=>'baza', connection=>'nowe_polaczenie'))
+    * @uses Libs_Connection::$err
+    * @uses Libs_Connection::$connections
+    * @uses Libs_Connection::$defaultCharset
     * @uses mysqli::__construct()
     * @uses mysqli::query()
     */
@@ -47,10 +45,10 @@ final class Libs_Connection
         self::$defaultCharset = $charset;
         if (isset($config) && !empty($config)) {
             parent::__construct(
-                $config[0],
-                $config[1],
-                $config[2],
-                $config[3]
+                $config['host'],
+                $config['user'],
+                $config['password'],
+                $config['db_name']
             );
             if (mysqli_connect_error()) {
                 $this->err = mysqli_connect_error();
@@ -58,10 +56,10 @@ final class Libs_Connection
             }
             $this->query("SET NAMES '$charset'");
         }
-        if (!isset($config[4]) || !$config[4]) {
-        $config[4] = 'default';
+        if (!isset($config['connection']) || !$config['connection']) {
+        $config['connection'] = 'default';
         }
-        self::$connections[$config[4]] = $this;
+        self::$connections[$config['connection']] = $this;
     }
     /**
     * niszczy wszystkie polaczenia
