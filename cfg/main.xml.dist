@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE root SYSTEM "dtd/config.dtd">
+<root>
+    <option id="host" value=""/>
+    <option id="user" value=""/>
+    <option id="password" value=""/>
+    <option id="db_name" value=""/>
+</root>
