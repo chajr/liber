@@ -180,6 +180,7 @@ button.datepick-cmd {
     margin: 1px;
     width: 36px;
     height: 21px;
+    line-height: 21px;
 }
 .datepick-month span {
     display: block;
