@@ -1,3 +1,73 @@
 body{
     background-image: url(../images/rough_diagonal_arka.png);
+    font-family: Arial,Helvetica,Sans-serif;
+}
+#breadcrumbs{
+    margin: 20px auto;
+    border: 1px solid #612c1a;
+    background-color: #ffe600;
+    color: #612c1a;
+    width: 700px;
+}
+#breadcrumbs li{
+    display: inline-block;
+    padding: 10px;
+}
+#breadcrumbs li.selected{
+    background-color: #ffa900;
+}
+#breadcrumbs li.visited{
+    background-color: #af6603;
+}
+#calendar_section{
+    background-color: #e9ddaf;
+    border: 1px solid #612c1a;
+}
+#calendar_section .datepick{
+    margin: 10px auto;
+    padding: 5px;
+    background-color: #e9ddaf;
+    border: 1px solid #612c1a;
+}
+#dates{
+    width: 400px;
+    margin: 5px auto;
+}
+#dates input{
+    padding: 5px;
+    border: 1px solid #612c1a;
+    width: 150px;
+}
+#steps{
+    width: 400px;
+    margin: 10px auto;
+    border: 1px solid #612c1a;
+    padding: 5px;
+    background-color: #e9ddaf;
+    height: 40px;
+}
+#steps div{
+    color: #fff;
+    background-color: #612c1a;
+    width: 150px;
+    text-align: center;
+    line-height: 40px;
+    display: inline-block;
+    margin: 0 23px;
+}
+#steps div:hover{
+    cursor: pointer;
+    background-color: #ffa900;
+    color: #612c1a;
+}
+#steps div.disabled:hover{
+    color: #fff;
+    background-color: #612c1a;
+    cursor: default;
+}
+.datepick-month td span{
+    height: 23px;
+    width: 38px;
+    line-height: 23px;
+    margin: 1px;
 }
