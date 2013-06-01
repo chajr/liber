@@ -107,3 +107,17 @@ body{
     top:50%;
     left:50%;
 }
+.rooms{
+    margin-top: 10px;
+    background-color: #E9DDAF;
+    border: 1px solid #612C1A;
+}
+.room{
+    height: 190px;
+    background-color: #ffe600;
+    padding: 10px;
+    margin: 10px;
+}
+.room.lock{
+    background-color: #ffa900;
+}
