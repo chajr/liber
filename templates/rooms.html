@@ -1,6 +1,13 @@
-<div class="locked_rooms">
-    {;start;locked_id;}
-        Locked room id: {;locked_id;id;}
-        <br/>
-    {;end;locked_id;}
+<div class="rooms">
+    {;start;rooms;}
+        <div class="room {;rooms;locked;}">
+            Id: {;rooms;id;}<br/>
+            Ilość miejsc: {;rooms;space;}<br/>
+            Numer pokoju: {;rooms;number;}<br/>
+            Piętro: {;rooms;floor;}<br/>
+            <p>
+                {;rooms;description;}
+            </p>
+        </div>
+    {;end;rooms;}
 </div>
