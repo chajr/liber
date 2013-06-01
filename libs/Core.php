@@ -2,7 +2,7 @@
 /**
  * @author chajr <chajr@bluetree.pl>
  * @package core
- * @version 0.4.0
+ * @version 0.4.1
  * @copyright chajr/bluetree
  */
 class Libs_Core
@@ -194,7 +194,7 @@ class Libs_Core
         $fromTimestamp = strtotime($from);
         $toTimestamp   = strtotime($to);
 
-        if (!is_int($fromTimestamp || !is_int($toTimestamp))) {
+        if (!is_int($fromTimestamp) || !is_int($toTimestamp)) {
             throw new Exception ('Dates are not integer values');
         }
         
