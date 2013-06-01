@@ -2,7 +2,7 @@
 /**
  * @author chajr <chajr@bluetree.pl>
  * @package core
- * @version 0.4.1
+ * @version 0.5.0
  * @copyright chajr/bluetree
  */
 class Libs_Core
@@ -132,20 +132,33 @@ class Libs_Core
     {
         $this->_getLockedRooms($from, $to);
 
-        $rooms          = new Libs_Render('rooms');
+        $roomsTemplate  = new Libs_Render('rooms');
         $stream         = '';
-        $displayArray   = array();
-        
-        foreach ($this->_lockedRooms as $room) {
-            $displayArray[] = array(
-                'id' => $room
-            );
-        }
+        $roomsList      = $this->_getRooms();
 
-        $rooms->loop('locked_id', $displayArray);
-        $stream .= $rooms->render();
+        $roomsTemplate->loop('rooms', $roomsList);
+        $stream .= $roomsTemplate->render();
 
         $this->_display = $stream;
+    }
+
+    /**
+     * return room with their options
+     * @return array
+     */
+    protected function _getRooms()
+    {
+        $rooms      = array();
+        $roomsList  = Libs_QueryModels::getRooms();
+        foreach ($roomsList->result(1) as $room) {
+            if (in_array($room['id'], $this->_lockedRooms)) {
+                $room['locked'] = 'locked';
+            } else {
+                $room['locked'] = 'free';
+            }
+            $rooms[] = $room;
+        }
+        return $rooms;
     }
 
     /**
