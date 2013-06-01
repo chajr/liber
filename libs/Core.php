@@ -2,7 +2,7 @@
 /**
  * @author chajr <chajr@bluetree.pl>
  * @package core
- * @version 0.2.0
+ * @version 0.4.0
  * @copyright chajr/bluetree
  */
 class Libs_Core
@@ -18,7 +18,13 @@ class Libs_Core
      * @var string
      */
     protected $_display = '';
-    
+
+    /**
+     * list of unavailable rooms
+     * @var array
+     */
+    protected $_lockedRooms = array();
+
     /**
      * start liber core class
      */
@@ -78,7 +84,10 @@ class Libs_Core
     protected function _controller()
     {
         switch ($_POST['page']) {
-
+            case 'rooms':
+                $this->_checkRange($_POST['from'], $_POST['to']);
+                $this->_roomsRender($_POST['from'], $_POST['to']);
+                break;
             default:
                 $this->_baseRender();
                 break;
@@ -90,14 +99,19 @@ class Libs_Core
      */
     protected function _baseRender()
     {
-        $header = new Libs_Render('header');
-        $breadcrumbs = new Libs_Render('breadcrumbs');
-        $footer = new Libs_Render('footer');
+        $header         = new Libs_Render('header');
+        $breadcrumbs    = new Libs_Render('breadcrumbs');
+        $footer         = new Libs_Render('footer');
+        $calendar       = new Libs_Render('calendar');
+        $steps          = new Libs_Render('index');
+
         $stream = '';
         $stream .= $header->render();
         $stream .= $breadcrumbs->render();
-        //$stream .=  $core->display();
-        $stream .=  $footer->render();
+        $stream .= $calendar->render();
+        $stream .= $steps->render();
+        $stream .= $footer->render();
+
         $this->_display = $stream;
     }
 
@@ -107,5 +121,145 @@ class Libs_Core
     public function display()
     {
         return $this->_display;
+    }
+
+    /**
+     * create list of rooms with their status
+     * @param date $from
+     * @param date $to
+     */
+    protected function _roomsRender($from, $to)
+    {
+        $this->_getLockedRooms($from, $to);
+
+        $rooms          = new Libs_Render('rooms');
+        $stream         = '';
+        $displayArray   = array();
+        
+        foreach ($this->_lockedRooms as $room) {
+            $displayArray[] = array(
+                'id' => $room
+            );
+        }
+
+        $rooms->loop('locked_id', $displayArray);
+        $stream .= $rooms->render();
+
+        $this->_display = $stream;
+    }
+
+    /**
+     * search for locked rooms
+     * @param date $from
+     * @param date $to
+     */
+    protected function _getLockedRooms($from, $to)
+    {
+        $currentTime    = strftime('%Y-%m-%d');
+        $terms          = Libs_QueryModels::getTerms($currentTime);
+        
+        foreach ($terms->result(1) as $room) {
+            $this->_checkIsLocked($room, $from, $to);
+        }
+    }
+
+    /**
+     * check that room is locked in given date range
+     * @param array $room
+     * @param date $from
+     * @param date $to
+     */
+    protected function _checkIsLocked(array $room, $from, $to)
+    {
+        $bool = $this->compare(
+            $room['data_przyjazdu'],
+            $room['data_wyjazdu'],
+            $from,
+            $to
+        );
+        
+        if (!$bool) {
+            $this->_lockedRooms[] = $room['id_pokoje'];
+        }
+    }
+
+    /**
+     * check that send parameters are correct
+     * @param date $from
+     * @param date $to
+     * @throws Exception
+     */
+    protected function _checkRange($from, $to)
+    {
+        $fromTimestamp = strtotime($from);
+        $toTimestamp   = strtotime($to);
+
+        if (!is_int($fromTimestamp || !is_int($toTimestamp))) {
+            throw new Exception ('Dates are not integer values');
+        }
+        
+        $difference = $toTimestamp - $fromTimestamp;
+        if ($difference < (3600 * 24)) {
+            throw new Exception('To small difference between dates');
+        }
+    }
+
+    /**
+     * compare dates, and return boolean TRUE if room is available
+     * @param date $roomFrom
+     * @param date $roomTo
+     * @param date $from
+     * @param date $to
+     * @return bool
+     */
+    protected function compare($roomFrom, $roomTo, $from, $to)
+    {
+        $roomAvailable = TRUE;
+        //      ----
+        //    ----
+        if ($from < $roomFrom && $roomFrom < $to && $to < $roomTo) {
+            $roomAvailable = FALSE;
+        }
+        //      ----
+        //        ----
+        if ($roomFrom < $from && $from < $roomTo && $roomFrom < $to) {
+            $roomAvailable = FALSE;
+        }
+        //      ----
+        //     ------
+        if ($from < $roomFrom && $roomTo < $to && $roomFrom < $to) {
+            $roomAvailable = FALSE;
+        }
+        //      ----
+        //       --
+        if ($roomFrom < $from && $from < $roomTo && $to < $roomTo) {
+            $roomAvailable = FALSE;
+        }
+        //      ----
+        //      ----
+        if ($roomFrom == $from && $roomTo == $to) {
+            $roomAvailable = FALSE;
+        }
+        //      ----
+        //      ---
+        if ($roomFrom == $from && $from < $roomTo && $to < $roomTo) {
+            $roomAvailable = FALSE;
+        }
+        //      ----
+        //       ---
+        if ($roomFrom < $from && $from < $roomTo && $to == $roomTo) {
+            $roomAvailable = FALSE;
+        }
+        //      ----
+        //     -----
+        if ($from < $roomFrom && $roomFrom < $to && $roomTo == $to) {
+            $roomAvailable = FALSE;
+        }
+        //      ----
+        //      -----
+        if ($roomFrom == $from && $from < $roomTo && $roomTo < $to) {
+            $roomAvailable = FALSE;
+        }
+        return $roomAvailable;
     }
 }
