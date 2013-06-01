@@ -22,13 +22,13 @@ $(document).ready(function()
             }
             if (selectedDate === 0) {
                 $('#from').val($.datepick.formatDate(
-                    'dd-mm-yyyy', 
+                    'yyyy-mm-dd', 
                     $('#calendar').datepick('getDate')[0])
                 );
             }
             if (selectedDate === 1) {
                 $('#to').val($.datepick.formatDate(
-                    'dd-mm-yyyy',
+                    'yyyy-mm-dd',
                     $('#calendar').datepick('getDate')[1])
                 );
             }
@@ -37,6 +37,8 @@ $(document).ready(function()
     });
     $('#steps .next').click(function()
     {
+        showSpiner();
+        $('#splash_screen').show();
         switch (step) {
             case 0:
                 var from = $('#from').val();
@@ -57,11 +59,22 @@ $(document).ready(function()
                         toSplit[0]
                     ).getTime();
                     var difference = newToDate - newFromDate;
-                    alert(difference);
                     if (difference < (3600 * 24)) {
                         alert('mala roznica');
+                        $('#splash_screen').hide();
                     } else {
-                        alert('ok');
+                        $.post('',
+                            {
+                                page: 'rooms',
+                                from: $('#from')  .val(),
+                                to:   $('#to')    .val()
+                            },
+                            function (data)
+                            {
+                                $('#result').html(data);
+                                $('#splash_screen').hide();
+                            });
+                        break;
                     }
                 }
                 break;
@@ -69,6 +82,29 @@ $(document).ready(function()
     });
     $('#steps .previous').click(function()
     {
-
+        
     });
 });
+function showSpiner()
+{
+    var opts = {
+        lines:      13,
+        length:     20,
+        width:      10,
+        radius:     30,
+        corners:    1,
+        rotate:     0,
+        direction:  1,
+        color:      '#fff',
+        speed:      1,
+        trail:      60,
+        shadow:     false,
+        hwaccel:    false,
+        className:  'spinner',
+        zIndex:     2e9,
+        top:        'auto',
+        left:       'auto'
+    };
+    var target = document.getElementById('spiner');
+    var spinner = new Spinner(opts).spin(target);
+}
