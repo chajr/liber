@@ -21,5 +21,8 @@ try{
     $core = new Libs_Core();
     echo $core->display();
 }catch (Exception $exception){
-    $exception->getMessage();
+    echo '<div class="error">
+            <i class="icon-error-alt"></i>
+            ' . $exception->getMessage() . '
+        </div>';
 }
