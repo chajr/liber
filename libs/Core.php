@@ -152,9 +152,9 @@ class Libs_Core
         $roomsList  = Libs_QueryModels::getRooms();
         foreach ($roomsList->result(1) as $room) {
             if (in_array($room['id'], $this->_lockedRooms)) {
-                $room['locked'] = 'locked';
+                $room['locked'] = 'lock';
             } else {
-                $room['locked'] = 'free';
+                $room['locked'] = 'unlock';
             }
             $rooms[] = $room;
         }
