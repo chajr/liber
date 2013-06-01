@@ -1,7 +1,7 @@
 /**
  * @author chajr <chajr@bluetree.pl>
  * @package core
- * @version 0.1.0
+ * @version 0.2.0
  * @copyright chajr/bluetree
  */
 $(document).ready(function()
@@ -73,6 +73,10 @@ $(document).ready(function()
                             {
                                 $('#result').html(data);
                                 $('#splash_screen').hide();
+                                $('#breadcrumbs li:eq(0)').removeClass('selected');
+                                $('#breadcrumbs li:eq(0)').addClass('visited');
+                                $('#breadcrumbs li:eq(1)').addClass('selected');
+                                $('#calendar').hide();
                             });
                         break;
                     }
