@@ -1,14 +1,18 @@
 <div class="rooms container_24">
     {;start;rooms;}
-        <div class="room grid_5 {;rooms;locked;}">
+        <div 
+            class="room grid_5 {;rooms;locked;} unselected" 
+            data-id="{;rooms;id;}"
+            data-space="{;rooms;space;}"
+        >
             <i class="icon-{;rooms;locked;}"></i><br/>
-            Id: {;rooms;id;}<br/>
             Ilość miejsc: {;rooms;space;}<br/>
             Numer pokoju: {;rooms;number;}<br/>
             Piętro: {;rooms;floor;}<br/>
             <p>
                 {;rooms;description;}
             </p>
+            <div class="select">Wybierz</div>
         </div>
     {;end;rooms;}
 </div>
