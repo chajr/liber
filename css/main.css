@@ -113,11 +113,39 @@ body{
     border: 1px solid #612C1A;
 }
 .room{
-    height: 190px;
-    background-color: #ffe600;
+    width: 188px;
+    height: 188px;
+    border: 1px solid #dbc87d;
+    background-color: #dbc87d;
     padding: 10px;
     margin: 10px;
+    position: relative;
 }
 .room.lock{
     background-color: #ffa900;
+}
+.room .select{
+    width:100px;
+    height: 25px;
+    line-height: 25px;
+    border: 1px solid #000;
+    background-color: #af6603;
+    color: #fff;
+    text-align: center;
+    cursor: pointer;
+    position: absolute;
+    left: 55px;
+    bottom: 10px;
+}
+.room .select:hover{
+    border: 1px solid #af6603;
+    background-color: #e9ddaf;
+    color: #af6603;
+}
+.room.lock .select{
+    display: none;
+}
+.room.selected{
+    border: 1px solid #612C1A;
+    background-color: #d0b488;
 }
