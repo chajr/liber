@@ -6,8 +6,10 @@
  */
 $(document).ready(function()
 {
-    var selectedDate = 0;
-    var step         = 0;
+    var selectedDate    = 0;
+    var step            = 0;
+    var selectedRooms   = new Array();
+
     $('#calendar').datepick({
         defaultDate: "+1w",
         changeMonth: true,
@@ -20,12 +22,14 @@ $(document).ready(function()
                 $('#from')  .val('');
                 $('#to')    .val('');
             }
+
             if (selectedDate === 0) {
                 $('#from').val($.datepick.formatDate(
                     'yyyy-mm-dd', 
                     $('#calendar').datepick('getDate')[0])
                 );
             }
+
             if (selectedDate === 1) {
                 $('#to').val($.datepick.formatDate(
                     'yyyy-mm-dd',
@@ -35,6 +39,7 @@ $(document).ready(function()
             selectedDate++;
         }
     });
+
     $('#steps .next').click(function()
     {
         showSpiner();
@@ -84,9 +89,29 @@ $(document).ready(function()
                 break;
         }
     });
+
     $('#steps .previous').click(function()
     {
         
+    });
+
+    $('body').on('click', '.room.unselected .select', function()
+    {
+        id = $(this).parent().data('id');
+        $(this).parent().addClass('selected');
+        $(this).parent().removeClass('unselected');
+        $(this).text('Anuluj');
+        selectedRooms.push(id);
+    });
+
+    $('body').on('click', '.room.selected .select', function()
+    {
+        id = $(this).parent().data('id');
+        $(this).parent().removeClass('selected');
+        $(this).parent().addClass('unselected');
+        $(this).text('Wybierz');
+        index = selectedRooms.lastIndexOf(id);
+        delete selectedRooms[index];
     });
 });
 function showSpiner()
