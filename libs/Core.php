@@ -2,7 +2,7 @@
 /**
  * @author chajr <chajr@bluetree.pl>
  * @package core
- * @version 0.5.0
+ * @version 0.6.0
  * @copyright chajr/bluetree
  */
 class Libs_Core
@@ -143,6 +143,25 @@ class Libs_Core
     }
 
     /**
+     * create list of options for room select
+     * @param integer $spaceSize
+     * @return string
+     */
+    protected function _createSpaceList($spaceSize)
+    {
+        $roomArray = array();
+        for ($i = 1; $i <= $spaceSize; $i++) {
+            $roomArray[] = array(
+                'value' => $i
+            );
+        }
+        
+        $spaceTemplate  = new Libs_Render('room_space');
+        $spaceTemplate->loop('space', $roomArray);
+        return $spaceTemplate->render();
+    }
+
+    /**
      * return room with their options
      * @return array
      */
@@ -156,6 +175,7 @@ class Libs_Core
             } else {
                 $room['locked'] = 'unlock';
             }
+            $room['space_option'] = $this->_createSpaceList($room['space']);
             $rooms[] = $room;
         }
         return $rooms;
