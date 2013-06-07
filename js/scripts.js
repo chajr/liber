@@ -1,14 +1,14 @@
 /**
  * @author chajr <chajr@bluetree.pl>
  * @package core
- * @version 0.2.0
+ * @version 0.3.0
  * @copyright chajr/bluetree
  */
 $(document).ready(function()
 {
     var selectedDate    = 0;
     var step            = 0;
-    var selectedRooms   = new Array();
+    var selectedRooms   = {};
 
     $('#calendar').datepick({
         defaultDate: "+1w",
@@ -25,7 +25,7 @@ $(document).ready(function()
 
             if (selectedDate === 0) {
                 $('#from').val($.datepick.formatDate(
-                    'yyyy-mm-dd', 
+                    'yyyy-mm-dd',
                     $('#calendar').datepick('getDate')[0])
                 );
             }
@@ -76,15 +76,45 @@ $(document).ready(function()
                             },
                             function (data)
                             {
-                                $('#result').html(data);
-                                $('#splash_screen').hide();
-                                $('#breadcrumbs li:eq(0)').removeClass('selected');
-                                $('#breadcrumbs li:eq(0)').addClass('visited');
-                                $('#breadcrumbs li:eq(1)').addClass('selected');
-                                $('#calendar').hide();
-                            });
-                        break;
+                                $('#result_rooms')          .html(data);
+                                $('#splash_screen')         .hide();
+                                $('#breadcrumbs li:eq(0)')  .removeClass('selected');
+                                $('#breadcrumbs li:eq(0)')  .addClass('visited');
+                                $('#breadcrumbs li:eq(1)')  .addClass('selected');
+                                $('#calendar')              .hide();
+                                step++;
+                            }
+                        );
                     }
+                }
+                break;
+            case 1:
+                if (selectedRooms.length < 1) {
+                    alert('brak wybranych pokoi');
+                    $('#splash_screen').hide();
+                } else {
+                    $('.rooms').find('.unlock.selected').each(function()
+                    {
+                        id      = $(this).data('id');
+                        rooms   = $(this).find('.space option:selected').val();
+                    });
+                    $.post('',
+                        {
+                            page:           'payment',
+                            selectedRooms:  selectedRooms
+                        },
+                        function (data)
+                        {
+                                $('#result_payment')        .html(data);
+                                $('#splash_screen')         .hide();
+                                $('#breadcrumbs li:eq(1)')  .removeClass('selected');
+                                $('#breadcrumbs li:eq(1)')  .addClass('visited');
+                                $('#breadcrumbs li:eq(2)')  .addClass('selected');
+                                $('#result_rooms')          .hide();
+                            step++;
+                        }
+                    );
+
                 }
                 break;
         }
@@ -92,26 +122,32 @@ $(document).ready(function()
 
     $('#steps .previous').click(function()
     {
-        
+
     });
 
     $('body').on('click', '.room.unselected .select', function()
     {
-        id = $(this).parent().data('id');
         $(this).parent().addClass('selected');
         $(this).parent().removeClass('unselected');
         $(this).text('Anuluj');
-        selectedRooms.push(id);
+        
+        id          = $(this).parent().data('id');
+        space       = $(this).parent().find('.space option:selected').val();
+        roomsArray  = {
+            roomId: id,
+            roomSpace: space
+        };
+        selectedRooms[id] = roomsArray;
     });
 
     $('body').on('click', '.room.selected .select', function()
     {
-        id = $(this).parent().data('id');
         $(this).parent().removeClass('selected');
         $(this).parent().addClass('unselected');
         $(this).text('Wybierz');
-        index = selectedRooms.lastIndexOf(id);
-        delete selectedRooms[index];
+        
+        id = $(this).parent().data('id');
+        delete selectedRooms[id];
     });
 });
 function showSpiner()
