@@ -97,6 +97,7 @@ $(document).ready(function()
                     {
                         id      = $(this).data('id');
                         rooms   = $(this).find('.space option:selected').val();
+                        selectedRooms[id]['roomSpace'] = rooms;
                     });
                     $.post('',
                         {
@@ -134,8 +135,8 @@ $(document).ready(function()
         id          = $(this).parent().data('id');
         space       = $(this).parent().find('.space option:selected').val();
         roomsArray  = {
-            roomId: id,
-            roomSpace: space
+            roomId:     id,
+            roomSpace:  space
         };
         selectedRooms[id] = roomsArray;
     });
@@ -145,7 +146,6 @@ $(document).ready(function()
         $(this).parent().removeClass('selected');
         $(this).parent().addClass('unselected');
         $(this).text('Wybierz');
-        
         id = $(this).parent().data('id');
         delete selectedRooms[id];
     });
