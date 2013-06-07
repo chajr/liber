@@ -13,9 +13,14 @@ class Libs_QueryModels
         return new Libs_Mysql($query);
     }
 
-    static function getRooms ()
+    static function getRooms ($id = NULL)
     {
-        $query = "SELECT * FROM pokoje";
+        $query = '';
+        if ($id) {
+            $query = "WHERE id = '$id'";
+        }
+        
+        $query = "SELECT * FROM pokoje $query";
         return new Libs_Mysql($query);
     }
 }
