@@ -2,7 +2,7 @@
 /**
  * @author chajr <chajr@bluetree.pl>
  * @package core
- * @version 0.7.0
+ * @version 0.7.1
  * @copyright chajr/bluetree
  */
 class Libs_Core
@@ -182,7 +182,7 @@ class Libs_Core
 
         $prices['dostawka']     = $this->_checkDostawka($priceModel);
         $prices['room_name']    = $roomsData['description'];
-        $prices['id']           = $roomsData[$roomId];
+        $prices['id']           = $roomId;
         return $prices;
     }
 
