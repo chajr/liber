@@ -2,7 +2,7 @@
 /**
  * @author chajr <chajr@bluetree.pl>
  * @package core
- * @version 0.6.0
+ * @version 0.7.0
  * @copyright chajr/bluetree
  */
 class Libs_Core
@@ -24,6 +24,12 @@ class Libs_Core
      * @var array
      */
     protected $_lockedRooms = array();
+
+    /**
+     * contains calculated price value
+     * @var float
+     */
+    protected $_priceSum;
 
     /**
      * start liber core class
@@ -88,10 +94,122 @@ class Libs_Core
                 $this->_checkRange($_POST['from'], $_POST['to']);
                 $this->_roomsRender($_POST['from'], $_POST['to']);
                 break;
+
+            case 'payment':
+                $this->_calculatePrice($_POST['selectedRooms']);
+                break;
+
             default:
                 $this->_baseRender();
                 break;
         }
+    }
+
+    /**
+     * calculate for selected rooms and render layout for it
+     * @param array $selectedRooms
+     */
+    protected function _calculatePrice($selectedRooms)
+    {
+        $priceStream = '';
+        if (!empty($selectedRooms)) {
+            foreach ($selectedRooms as $room) {
+                $finalPrice = $this->_createPriceModel(
+                    $room['roomId'],
+                    $room['roomSpace']
+                );
+
+                $priceStream .= $this->_renderPrice($finalPrice);
+            }
+        }
+
+        $fullPriceLayout = new Libs_Render('payment');
+        $fullPriceLayout->generate('rooms', $priceStream);
+        $fullPriceLayout->generate('full_price', $this->_priceSum);
+        $this->_display = $fullPriceLayout->render();
+    }
+
+    /**
+     * render prices for single room
+     * @param array $finalPrice
+     * @return string
+     */
+    protected function _renderPrice($finalPrice)
+    {
+        $roomPriceLayout = new Libs_Render('room_price');
+        $roomPriceLayout->generate('id', $finalPrice['id']);
+        $roomPriceLayout->generate('room_name', $finalPrice['room_name']);
+        $roomPriceLayout->generate('normal', $finalPrice['normal']);
+        $roomPriceLayout->generate('spa', $finalPrice['spa']);
+
+        if ($finalPrice['dostawka']) {
+            foreach ($finalPrice['dostawka'] as $key => $value) {
+                $valueName  = 'dostawka_' . $key . '_value';
+                $name       = 'dostawka_' . $key;
+                $roomPriceLayout->generate($valueName, $key);
+                $roomPriceLayout->generate($name, $value);
+            }
+        }
+
+        return $roomPriceLayout->render();
+    }
+
+    /**
+     * return calculated prices for one room
+     * @param integer $roomId
+     * @param integer $roomSpace
+     * @return array
+     */
+    protected function _createPriceModel($roomId, $roomSpace)
+    {
+        $prices         = array();
+        $roomsData      = Libs_QueryModels::getRooms($roomId)->result();
+        $priceModel     = $this->_getPriceModelData($roomsData['price_model']);
+
+        if (isset($priceModel['one_price'])) {
+            $prices['normal']   = $priceModel['one_price'];
+            if ($priceModel['spa']) {
+                $prices['spa']      = $priceModel['spa_1'];
+            }
+        } else {
+            $prices['normal']   = $priceModel['price_' . $roomSpace];
+            if ($priceModel['spa']) {
+                $prices['spa']      = $priceModel['spa_' . $roomSpace];
+            }
+        }
+
+        $this->_priceSum += $prices['normal'];
+
+        $prices['dostawka']     = $this->_checkDostawka($priceModel);
+        $prices['room_name']    = $roomsData['description'];
+        $prices['id']           = $roomsData[$roomId];
+        return $prices;
+    }
+
+    /**
+     * check that dostawka is available
+     * @param array $roomData
+     * @return array|integer
+     */
+    protected function _checkDostawka($roomData)
+    {
+        $dostawka = array();
+        if (isset($roomData['dostawka_1'])) {
+            $dostawka[1] = $roomData['dostawka_1'];
+        }
+
+        if (isset($roomData['dostawka_1'])) {
+            $dostawka[2] = $roomData['dostawka_2'];
+        }
+
+        if (isset($roomData['dostawka_1'])) {
+            $dostawka[3] = $roomData['dostawka_3'];
+        }
+
+        if (empty($dostawka)) {
+            return 0;
+        }
+        return $dostawka;
     }
 
     /**
@@ -155,7 +273,7 @@ class Libs_Core
                 'value' => $i
             );
         }
-        
+
         $spaceTemplate  = new Libs_Render('room_space');
         $spaceTemplate->loop('space', $roomArray);
         return $spaceTemplate->render();
@@ -182,6 +300,21 @@ class Libs_Core
     }
 
     /**
+     * return price model for given serialized string, or single model value
+     * @param string $data
+     * @param integer|null $id
+     * @return array|integer|bool
+     */
+    protected function _getPriceModelData($data, $id = NULL)
+    {
+        $array = unserialize($data);
+        if ($id) {
+            return $array[$id];
+        }
+        return $array;
+    }
+
+    /**
      * search for locked rooms
      * @param date $from
      * @param date $to
@@ -190,7 +323,7 @@ class Libs_Core
     {
         $currentTime    = strftime('%Y-%m-%d');
         $terms          = Libs_QueryModels::getTerms($currentTime);
-        
+
         foreach ($terms->result(1) as $room) {
             $this->_checkIsLocked($room, $from, $to);
         }
@@ -210,7 +343,7 @@ class Libs_Core
             $from,
             $to
         );
-        
+
         if (!$bool) {
             $this->_lockedRooms[] = $room['id_pokoje'];
         }
@@ -230,7 +363,7 @@ class Libs_Core
         if (!is_int($fromTimestamp) || !is_int($toTimestamp)) {
             throw new Exception ('Dates are not integer values');
         }
-        
+
         $difference = $toTimestamp - $fromTimestamp;
         if ($difference < (3600 * 24)) {
             throw new Exception('To small difference between dates');
