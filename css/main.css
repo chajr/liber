@@ -149,3 +149,20 @@ body{
     border: 1px solid #612C1A;
     background-color: #d0b488;
 }
+#result_payment > div {
+    border: 1px solid #612C1A;
+    background-color: #E9DDAF;
+    padding: 10px;
+    margin: 10px auto;
+    width: 960px;
+}
+.room_price {
+    border: 1px dashed #612C1A;
+    background-color: #E0D0A4;
+    padding:10px;
+    width: 90%;
+    margin: 5px auto;
+}
+.room_price:hover {
+    background-color: #c9bD8F;
+}
