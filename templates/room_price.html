@@ -11,14 +11,19 @@
     </div>
     <div class="spa">
         <label>Z zabiegiem SPA</label>
-        <input name="spa_{;id;}" value="1" type="checkbox"/>
+        <input name="spa_{;id;}" value="1" type="checkbox" class="spa_price"/>
         <span> <i>{;spa;}</i> zł</span>
         <div class="clear"></div>
     </div>
     {;op;dostawka1;}
     <div class="dostawka_1">
         <label>Dostawka dla osoby dorosłej</label>
-        <input name="dostawka_{;id;}" value="{;dostawka_1_value;}" type="radio"/>
+        <input 
+                name="dostawka_{;id;}"
+                value="{;dostawka_1_value;}"
+                type="radio"
+                class="dostawka_price"
+        />
         <span>+ <i>{;dostawka_1;}</i> zł</span>
         <div class="clear"></div>
     </div>
@@ -26,7 +31,12 @@
     {;op;dostawka2;}
     <div class="dostawka_2">
         <label>Dostawka dla dziecka 10 - 18 lat</label>
-        <input name="dostawka_{;id;}" value="{;dostawka_2_value;}" type="radio"/>
+        <input 
+                name="dostawka_{;id;}"
+                value="{;dostawka_2_value;}"
+                type="radio"
+                class="dostawka_price"
+        />
         <span>+ <i>{;dostawka_2;}</i> zł</span>
         <div class="clear"></div>
     </div>
@@ -34,7 +44,12 @@
     {;op;dostawka3;}
     <div class="dostawka_3">
         <label>Dostawka dla dziecka 3 - 10 lat</label>
-        <input name="dostawka_{;id;}" value="{;dostawka_3_value;}" type="radio"/>
+        <input 
+                name="dostawka_{;id;}"
+                value="{;dostawka_3_value;}"
+                type="radio"
+                class="dostawka_price"
+        />
         <span>+ <i>{;dostawka_3;}</i> zł</span>
         <div class="clear"></div>
     </div>
