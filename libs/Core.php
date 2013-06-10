@@ -2,7 +2,7 @@
 /**
  * @author chajr <chajr@bluetree.pl>
  * @package core
- * @version 0.7.1
+ * @version 0.8.0
  * @copyright chajr/bluetree
  */
 class Libs_Core
@@ -142,6 +142,10 @@ class Libs_Core
         $roomPriceLayout->generate('normal', $finalPrice['normal']);
         $roomPriceLayout->generate('spa', $finalPrice['spa']);
 
+        if ($finalPrice['single']) {
+            $roomPriceLayout->generate('single', '');
+        }
+
         if ($finalPrice['dostawka']) {
             foreach ($finalPrice['dostawka'] as $key => $value) {
                 $valueName  = 'dostawka_' . $key . '_value';
@@ -162,9 +166,10 @@ class Libs_Core
      */
     protected function _createPriceModel($roomId, $roomSpace)
     {
-        $prices         = array();
-        $roomsData      = Libs_QueryModels::getRooms($roomId)->result();
-        $priceModel     = $this->_getPriceModelData($roomsData['price_model']);
+        $prices             = array();
+        $prices['single']   = FALSE;
+        $roomsData          = Libs_QueryModels::getRooms($roomId)->result();
+        $priceModel         = $this->_getPriceModelData($roomsData['price_model']);
 
         if (isset($priceModel['one_price'])) {
             $prices['normal']   = $priceModel['one_price'];
@@ -175,6 +180,10 @@ class Libs_Core
             $prices['normal']   = $priceModel['price_' . $roomSpace];
             if ($priceModel['spa']) {
                 $prices['spa']      = $priceModel['spa_' . $roomSpace];
+            }
+            
+            if ((string)$roomSpace === '1') {
+                $prices['single'] = TRUE;
             }
         }
 
