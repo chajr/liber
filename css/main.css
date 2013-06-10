@@ -166,3 +166,49 @@ body{
 .room_price:hover {
     background-color: #c9bD8F;
 }
+.room_price .spa, 
+.room_price .dostawka_1,
+.room_price .dostawka_2,
+.room_price .dostawka_3{
+    margin: 10px 0;
+}
+.room_price .spa span,
+.room_price .dostawka_1 span,
+.room_price .dostawka_2 span,
+.room_price .dostawka_3 span{
+    font-weight: bold;
+}
+.room_price div label{
+    float: left;
+    width:260px;
+}
+.room_price div input{
+    float: left;
+    width:20px;
+}
+.room_price div span{
+    float: left;
+}
+.room_price .name{
+    font-size: 22px;
+    text-align: center;
+}
+.room_price .price{
+    font-size: 18px;
+    font-weight: bold;
+    border-bottom: 10px;
+}
+.room_price .price span{
+    font-size: 18px;
+    font-weight: normal;
+}
+#price_summary{
+    text-align: center;
+    font-size: 20px;
+}
+#price_summary i{
+    font-weight: bold;
+}
+.clear{
+    clear: both;
+}
