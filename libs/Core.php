@@ -2,7 +2,7 @@
 /**
  * @author chajr <chajr@bluetree.pl>
  * @package core
- * @version 0.8.0
+ * @version 0.9.0
  * @copyright chajr/bluetree
  */
 class Libs_Core
@@ -153,6 +153,8 @@ class Libs_Core
                 $roomPriceLayout->generate($valueName, $key);
                 $roomPriceLayout->generate($name, $value);
             }
+
+            $roomPriceLayout->generate('dostawka_n', '');
         }
 
         return $roomPriceLayout->render();

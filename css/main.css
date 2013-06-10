@@ -169,13 +169,15 @@ body{
 .room_price .spa, 
 .room_price .dostawka_1,
 .room_price .dostawka_2,
-.room_price .dostawka_3{
+.room_price .dostawka_3,
+.room_price .dostawka_n{
     margin: 10px 0;
 }
 .room_price .spa span,
 .room_price .dostawka_1 span,
 .room_price .dostawka_2 span,
-.room_price .dostawka_3 span{
+.room_price .dostawka_3 span,
+.room_price .dostawka_n span{
     font-weight: bold;
 }
 .room_price div label{
