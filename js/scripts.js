@@ -140,6 +140,7 @@ $(document).ready(function()
                     },
                     function (data)
                     {
+                        $('#result_contact')        .html(data);
                         $('#splash_screen')         .hide();
                         $('#breadcrumbs li:eq(2)')  .removeClass('selected');
                         $('#breadcrumbs li:eq(2)')  .addClass('visited');
