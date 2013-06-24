@@ -1,7 +1,7 @@
 /**
  * @author chajr <chajr@bluetree.pl>
  * @package core
- * @version 0.3.0
+ * @version 0.4.0
  * @copyright chajr/bluetree
  */
 $(document).ready(function()
@@ -9,6 +9,7 @@ $(document).ready(function()
     var selectedDate    = 0;
     var step            = 0;
     var selectedRooms   = {};
+    var dostawki        = {};
 
     $('#calendar').datepick({
         defaultDate: "+1w",
@@ -106,17 +107,47 @@ $(document).ready(function()
                         },
                         function (data)
                         {
-                                $('#result_payment')        .html(data);
-                                $('#splash_screen')         .hide();
-                                $('#breadcrumbs li:eq(1)')  .removeClass('selected');
-                                $('#breadcrumbs li:eq(1)')  .addClass('visited');
-                                $('#breadcrumbs li:eq(2)')  .addClass('selected');
-                                $('#result_rooms')          .hide();
+                            $('#result_payment')        .html(data);
+                            $('#splash_screen')         .hide();
+                            $('#breadcrumbs li:eq(1)')  .removeClass('selected');
+                            $('#breadcrumbs li:eq(1)')  .addClass('visited');
+                            $('#breadcrumbs li:eq(2)')  .addClass('selected');
+                            $('#result_rooms')          .hide();
                             step++;
                         }
                     );
 
                 }
+                break;
+            case 2:
+                $('#rooms_prices .room_price').each(function()
+                {
+                    inputs      = {};
+                    elementId   = $(this).attr('id');
+                    id          = elementId.replace(/room_/, '');
+                    $(this).find('input:checked').each(function()
+                    {
+                        selectedRooms[id]['spa'] = 1;
+                    });
+                    $(this).find('input:selected').each(function()
+                    {
+                        selectedRooms[id]['dostawka'] = $(this).attr('value');
+                    });
+                });
+                $.post('',
+                    {
+                        page:           'personal'
+                    },
+                    function (data)
+                    {
+                        $('#splash_screen')         .hide();
+                        $('#breadcrumbs li:eq(2)')  .removeClass('selected');
+                        $('#breadcrumbs li:eq(2)')  .addClass('visited');
+                        $('#breadcrumbs li:eq(3)')  .addClass('selected');
+                        $('#result_payment')        .hide();
+                        step++;
+                    }
+                );
                 break;
         }
     });
@@ -131,12 +162,14 @@ $(document).ready(function()
         $(this).parent().addClass('selected');
         $(this).parent().removeClass('unselected');
         $(this).text('Anuluj');
-        
+
         id          = $(this).parent().data('id');
         space       = $(this).parent().find('.space option:selected').val();
         roomsArray  = {
             roomId:     id,
-            roomSpace:  space
+            roomSpace:  space,
+            spa:        '',
+            dostawka:   ''
         };
         selectedRooms[id] = roomsArray;
     });
@@ -148,6 +181,41 @@ $(document).ready(function()
         $(this).text('Wybierz');
         id = $(this).parent().data('id');
         delete selectedRooms[id];
+    });
+
+    $('body').on('click', '.spa_price', function()
+    {
+        fullPrice   = $('#price_summary i').html();
+        price       = $(this).parent().find('span i').html();
+        isChecked   = $(this).is(':checked');
+
+        if (isChecked) {
+            finalPrice = parseFloat(fullPrice) + parseFloat(price);
+        } else {
+            finalPrice = fullPrice - price;
+        }
+
+        $('#price_summary i').html(finalPrice);
+    });
+
+    $('body').on('click', '.dostawka_price', function()
+    {
+        fullPrice       = $('#price_summary i').html();
+        name            = $(this).attr('name');
+
+        if (!dostawki[name]) {
+            previousPrice   = 0;
+        } else {
+            previousPrice   = dostawki[name];
+        }
+
+        finalPrice      = parseFloat(fullPrice) - parseFloat(previousPrice);
+        fullPrice       = finalPrice;
+        price           = $(this).parent().find('span i').html();
+        dostawki[name]  = price;
+        finalPrice      = parseFloat(fullPrice) + parseFloat(price);
+
+        $('#price_summary i').html(finalPrice);
     });
 });
 function showSpiner()
