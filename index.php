@@ -15,7 +15,6 @@ require_once 'libs/Render.php';
 require_once 'libs/Form.php';
 require_once 'libs/Valid.php';
 require_once 'libs/Xml.php';
-require_once 'libs/Liber.php';
 require_once 'libs/QueryModels.php';
 try{
     $core = new Libs_Core();
