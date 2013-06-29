@@ -4,6 +4,8 @@
  * @version 0.4.0
  * @copyright chajr/bluetree
  */
+var validatorError = false;
+
 $(document).ready(function()
 {
     var selectedDate    = 0;
@@ -45,6 +47,7 @@ $(document).ready(function()
     {
         showSpiner();
         $('#splash_screen').show();
+
         switch (step) {
             case 0:
                 var from = $('#from').val();
@@ -65,6 +68,7 @@ $(document).ready(function()
                         toSplit[0]
                     ).getTime();
                     var difference = newToDate - newFromDate;
+
                     if (difference < (3600 * 24)) {
                         alert('mala roznica');
                         $('#splash_screen').hide();
@@ -89,6 +93,7 @@ $(document).ready(function()
                     }
                 }
                 break;
+
             case 1:
                 if (selectedRooms.length < 1) {
                     alert('brak wybranych pokoi');
@@ -119,6 +124,7 @@ $(document).ready(function()
 
                 }
                 break;
+
             case 2:
                 $('#rooms_prices .room_price').each(function()
                 {
@@ -146,6 +152,26 @@ $(document).ready(function()
                         $('#breadcrumbs li:eq(2)')  .addClass('visited');
                         $('#breadcrumbs li:eq(3)')  .addClass('selected');
                         $('#result_payment')        .hide();
+                        step++;
+
+                        useValidator();
+                    }
+                );
+                break;
+
+            case 3:
+                $.post('',
+                    {
+                        page:           'submit'
+                    },
+                    function (data)
+                    {
+                        $('#result_end')            .html(data);
+                        $('#splash_screen')         .hide();
+                        $('#breadcrumbs li:eq(3)')  .removeClass('selected');
+                        $('#breadcrumbs li:eq(3)')  .addClass('visited');
+                        $('#breadcrumbs li:eq(4)')  .addClass('selected');
+                        $('#result_contact')        .hide();
                         step++;
                     }
                 );
@@ -219,6 +245,33 @@ $(document).ready(function()
         $('#price_summary i').html(finalPrice);
     });
 });
+
+function useValidator()
+{
+    jQuery('#user_data').validVal({
+        fields: {
+            onInvalid: function(form, language) {
+                var element = jQuery(this).parent();
+                element.find('.icon-error').show();
+                element.find('.icon-ok').hide();
+                validatorError = true;
+            },
+
+            onValid: function(form, language) {
+                var element = jQuery(this).parent();
+                element.find('.icon-ok').show();
+                element.find('.icon-error').hide();
+            }
+        },
+
+        form: {
+            onValid: function(){
+                validatorError = false;
+            }
+        }
+    });
+}
+
 function showSpiner()
 {
     var opts = {

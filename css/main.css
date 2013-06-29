@@ -214,3 +214,69 @@ body{
 .clear{
     clear: both;
 }
+#regulamin_desc{
+    display: none;
+}
+#user_data{
+    padding: 10px 0;
+}
+#user_data p{
+    margin: 5px auto;
+    width: 750px;
+    display: block;
+}
+#user_data p i{
+    line-height: 37px;
+    float: right;
+}
+#user_data p.regulamin i{
+    float: none;
+    margin-left: 20px;
+}
+#user_data p.regulamin{
+    margin-top: 30px;
+}
+#user_data p i.icon-ok{
+    color: darkgreen;
+    display: none;
+}
+#user_data p i.icon-error{
+    color: #b60507;
+    display: none;
+}
+#user_data label{
+    float: left;
+    width: 250px;
+    color: #612C1A;
+    line-height: 40px;
+}
+#user_data input{
+    float: left;
+    margin-left: 30px;
+    width: 380px;
+    padding: 10px;
+}
+#user_data input.input_error{
+    border-color: #A50404;
+    background-color: #D19898;
+}
+#user_data p.important{
+    border: 1px dashed #612C1A;
+    background-color: #EFCF02;
+    padding: 15px;
+}
+#user_data p.important i{
+    float: none;
+    line-height: normal;
+}
+input{
+    border: 1px solid #612C1A;
+    border-radius:3px;
+    -moz-border-radius:3px;
+    -webkit-border-radius:3px;
+    background-color: #D2C69A;
+    color: #612C1A;
+}
+#regulamin{
+    margin-top: 15px;
+}

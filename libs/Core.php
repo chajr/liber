@@ -2,7 +2,7 @@
 /**
  * @author chajr <chajr@bluetree.pl>
  * @package core
- * @version 0.9.0
+ * @version 0.10.0
  * @copyright chajr/bluetree
  */
 class Libs_Core
@@ -99,10 +99,48 @@ class Libs_Core
                 $this->_calculatePrice($_POST['selectedRooms']);
                 break;
 
+            case 'personal':
+                $this->_getUserForm();
+                break;
+
+            case 'submit':
+                $this->_validateForm();
+                break;
+
             default:
                 $this->_baseRender();
                 break;
         }
+    }
+
+    protected function _validateForm()
+    {
+        
+    }
+
+    protected function _sendInfo()
+    {
+        
+    }
+
+    protected function _saveReservation()
+    {
+        
+    }
+
+    protected function _showInfo()
+    {
+        
+    }
+
+    /**
+     * show form to submit reservation
+     */
+    protected function _getUserForm()
+    {
+        $userData = new Libs_Render('result_payment');
+        
+        $this->_display = $userData->render();
     }
 
     /**
