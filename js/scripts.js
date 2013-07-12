@@ -1,10 +1,10 @@
 /**
  * @author chajr <chajr@bluetree.pl>
  * @package core
- * @version 0.4.0
+ * @version 0.5.0
  * @copyright chajr/bluetree
  */
-var validatorError = false;
+var validatorErrorList = new Array();
 
 $(document).ready(function()
 {
@@ -69,7 +69,7 @@ $(document).ready(function()
                     ).getTime();
                     var difference = newToDate - newFromDate;
 
-                    if (difference < (3600 * 24)) {
+                    if (Math.abs(difference) < (3600 * 24)) {
                         alert('mala roznica');
                         $('#splash_screen').hide();
                     } else {
@@ -160,21 +160,39 @@ $(document).ready(function()
                 break;
 
             case 3:
-                $.post('',
-                    {
-                        page:           'submit'
-                    },
-                    function (data)
-                    {
-                        $('#result_end')            .html(data);
-                        $('#splash_screen')         .hide();
-                        $('#breadcrumbs li:eq(3)')  .removeClass('selected');
-                        $('#breadcrumbs li:eq(3)')  .addClass('visited');
-                        $('#breadcrumbs li:eq(4)')  .addClass('selected');
-                        $('#result_contact')        .hide();
-                        step++;
-                    }
-                );
+                if (
+                    validatorErrorList['email']         != false
+                    && validatorErrorList['imie']       != false
+                    && validatorErrorList['kod']        != false
+                    && validatorErrorList['miasto']     != false
+                    && validatorErrorList['nazwisko']   != false
+                    && validatorErrorList['numer']      != false
+                    && validatorErrorList['regulamin']  != false
+                    && validatorErrorList['telefon']    != false
+                    && validatorErrorList['ulica']      != false
+                ) {
+                    $.post('',
+                        {
+                            page:           'submit',
+                            rooms:          selectedRooms,
+                            data:           $('#user_data').serializeArray()
+                        },
+
+                        function (data)
+                        {
+                            $('#result_end')            .html(data);
+                            $('#splash_screen')         .hide();
+                            $('#breadcrumbs li:eq(3)')  .removeClass('selected');
+                            $('#breadcrumbs li:eq(3)')  .addClass('visited');
+                            $('#breadcrumbs li:eq(4)')  .addClass('selected');
+                            $('#result_contact')        .hide();
+                            step++;
+                        }
+                    );
+                } else {
+                    alert(':(');
+                    $('#splash_screen').hide();
+                }
                 break;
         }
     });
@@ -250,23 +268,22 @@ function useValidator()
 {
     jQuery('#user_data').validVal({
         fields: {
-            onInvalid: function(form, language) {
-                var element = jQuery(this).parent();
+            onInvalid: function(form, language)
+            {
+                var element             = jQuery(this).parent();
+                id                      = jQuery(this).attr('id');
+                validatorErrorList[id]  = false;
                 element.find('.icon-error').show();
                 element.find('.icon-ok').hide();
-                validatorError = true;
             },
 
-            onValid: function(form, language) {
-                var element = jQuery(this).parent();
+            onValid: function(form, language)
+            {
+                var element             = jQuery(this).parent();
+                id                      = jQuery(this).attr('id');
+                validatorErrorList[id]  = true;
                 element.find('.icon-ok').show();
                 element.find('.icon-error').hide();
-            }
-        },
-
-        form: {
-            onValid: function(){
-                validatorError = false;
             }
         }
     });
@@ -292,6 +309,6 @@ function showSpiner()
         top:        'auto',
         left:       'auto'
     };
-    var target = document.getElementById('spiner');
+    var target  = document.getElementById('spiner');
     var spinner = new Spinner(opts).spin(target);
 }
