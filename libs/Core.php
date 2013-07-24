@@ -113,9 +113,99 @@ class Libs_Core
         }
     }
 
+    /**
+     * check that form filed are filled correctly
+     * @throws Exception
+     */
     protected function _validateForm()
     {
-        
+        $validFlag = array();
+
+        if (!isset($_POST['rooms']) || empty($_POST['rooms'])) {
+            throw new Exception('Brak wybranych pokojów');
+        }
+
+        foreach ($_POST['data'] as $input) {
+            $value = $input['value'];
+
+            switch ($input['name']) {
+                case'imie':
+                    $bool = Libs_Valid::valid($value, 'letters');
+                    if (!$bool) {
+                        $validFlag['imie'] = ' _ ,.- oraz litery';
+                    }
+                    break;
+
+                case'nazwisko':
+                    $bool = Libs_Valid::valid($value, 'letters');
+                    if (!$bool) {
+                        $validFlag['nazwisko'] = ' _ ,.- oraz litery';
+                    }
+                    break;
+
+                case'ulca':
+                    $bool = Libs_Valid::valid($value, 'num_chars');
+                    if (!$bool) {
+                        $validFlag['ulica'] = '.,_- oraz litery i cyfry';
+                    }
+                    break;
+
+                case'numer':
+                    $bool = Libs_Valid::valid($value, 'multinum');
+                    if (!$bool) {
+                        $validFlag['multinum'] = ' _ ,.- oraz litery';
+                    }
+                    break;
+
+                case'miasto':
+                    $bool = Libs_Valid::valid($value, 'num_chars');
+                    if (!$bool) {
+                        $validFlag['ulica'] = '.,_- oraz litery i cyfry';
+                    }
+                    break;
+
+                case'kod':
+                    $bool = Libs_Valid::postCode($value);
+                    if (!$bool) {
+                        $validFlag['kod'] = 'format: xx-xxx';
+                    }
+                    break;
+
+                case'telefon':
+                    $bool = Libs_Valid::phone($value);
+                    if (!$bool) {
+                        $validFlag['telefon'] = 'np: +48 ( 052 ) 131 231-2312';
+                    }
+                    break;
+
+                case'email':
+                    $bool = Libs_Valid::mail($value);
+                    if (!$bool) {
+                        $validFlag['email'] = FALSE;
+                    }
+                    break;
+
+                case'regulamin':
+                    if ($value !== '1') {
+                        $validFlag['regulamin'] = 'regulamin musi być zaznaczony';
+                    }
+                    break;
+
+                default:
+                    throw new Exception ('Nieoczekiwane dane - ' . $input['name']);
+                    break;
+            }
+        }
+
+        if (!empty($validFlag)) {
+            $message = 'Błędnie wypełnione pola<br/>';
+            
+            foreach ($validFlag as $key => $error) {
+                $message .= $key . ' - tylko: ' . $error . '<br/>';
+            }
+
+            throw new Exception($message);
+        }
     }
 
     protected function _sendInfo()
