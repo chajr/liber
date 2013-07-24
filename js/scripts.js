@@ -161,7 +161,7 @@ $(document).ready(function()
 
             case 3:
                 if (
-                    validatorErrorList['email']         != false
+                       validatorErrorList['email']      != false
                     && validatorErrorList['imie']       != false
                     && validatorErrorList['kod']        != false
                     && validatorErrorList['miasto']     != false
@@ -190,7 +190,7 @@ $(document).ready(function()
                         }
                     );
                 } else {
-                    alert(':(');
+                    alert('Formularz jest błędnie wypełniony:(');
                     $('#splash_screen').hide();
                 }
                 break;
