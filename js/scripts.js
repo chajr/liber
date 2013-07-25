@@ -1,7 +1,7 @@
 /**
  * @author chajr <chajr@bluetree.pl>
  * @package core
- * @version 0.5.0
+ * @version 0.5.1
  * @copyright chajr/bluetree
  */
 var validatorErrorList = new Array();
@@ -12,6 +12,8 @@ $(document).ready(function()
     var step            = 0;
     var selectedRooms   = {};
     var dostawki        = {};
+    var from            = '';
+    var to              = '';
 
     $('#calendar').datepick({
         defaultDate: "+1w",
@@ -50,8 +52,9 @@ $(document).ready(function()
 
         switch (step) {
             case 0:
-                var from = $('#from').val();
-                var to   = $('#to').val();
+                from = $('#from')   .val();
+                to   = $('#to')     .val();
+
                 if (from === '' || to === '') {
                     alert('brak dat');
                 } else {
@@ -175,7 +178,9 @@ $(document).ready(function()
                         {
                             page:           'submit',
                             rooms:          selectedRooms,
-                            data:           $('#user_data').serializeArray()
+                            data:           $('#user_data').serializeArray(),
+                            from:           from,
+                            to:             to
                         },
 
                         function (data)
