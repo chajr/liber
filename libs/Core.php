@@ -2,7 +2,7 @@
 /**
  * @author chajr <chajr@bluetree.pl>
  * @package core
- * @version 0.10.0
+ * @version 0.11.0
  * @copyright chajr/bluetree
  */
 class Libs_Core
@@ -105,6 +105,10 @@ class Libs_Core
 
             case 'submit':
                 $this->_validateForm();
+                $reservationId = $this->_saveReservation();
+                $this->_saveTerm($reservationId);
+                $this->_sendInfo();
+                $this->_showInfo();
                 break;
 
             default:
@@ -143,7 +147,7 @@ class Libs_Core
                     }
                     break;
 
-                case'ulca':
+                case'ulica':
                     $bool = Libs_Valid::valid($value, 'num_chars');
                     if (!$bool) {
                         $validFlag['ulica'] = '.,_- oraz litery i cyfry';
@@ -201,23 +205,87 @@ class Libs_Core
             $message = 'Błędnie wypełnione pola<br/>';
             
             foreach ($validFlag as $key => $error) {
-                $message .= $key . ' - tylko: ' . $error . '<br/>';
+                $message .= $key . ' - tylko znaki: ' . $error . '<br/>';
             }
 
             throw new Exception($message);
         }
     }
 
+    /**
+     * send emails to user and to hotel
+     */
     protected function _sendInfo()
     {
         
     }
 
+    /**
+     * save reservation information to database
+     * 
+     * @return int|null reservation id if was created
+     * @throws Exception
+     */
     protected function _saveReservation()
     {
-        
+        if (isset($_POST['rooms']) && !empty($_POST['rooms'])) {
+            $rooms = serialize($_POST['rooms']);
+        } else {
+            throw new Exception ('Brak danych dla pokoi');
+        }
+
+        $data = array();
+        foreach ($_POST['data'] as $input) {
+            $data[$input['name']] = $input['value'];
+        }
+
+        $reservation  = Libs_QueryModels::saveReservation(
+            $data['imie'], $data['nazwisko'], $_POST['from'], $_POST['to'],
+            $data['email'], $data['telefon'], $data['ulica'], $data['numer'],
+            $data['miasto'], $data['kod'], $rooms
+        );
+
+        if (!$reservation->id) {
+            throw new Exception('Błąd podczas zapisu do bazy danych');
+        }
+
+        return $reservation->id;
     }
 
+    /**
+     * save term information
+     * 
+     * @param integer $reservationId
+     * @throws Exception
+     */
+    protected function _saveTerm($reservationId)
+    {
+        $errorFlag = FALSE;
+
+        if (isset($_POST['rooms']) && !empty($_POST['rooms'])) {
+
+            foreach ($_POST['rooms'] as $room) {
+                $term  = Libs_QueryModels::saveTerm(
+                    $room['roomId'], $reservationId, $_POST['from'], $_POST['to']
+                );
+
+                if (!$term->id) {
+                    $errorFlag = TRUE;
+                }
+            }
+        }
+
+        if ($errorFlag) {
+            Libs_QueryModels::removeReservation($reservationId);
+            Libs_QueryModels::removeTerm($reservationId);
+
+            throw new Exception('Błąd podczas zapisu do bazy danych');
+        }
+    }
+
+    /**
+     * show information about success or fail saving reservation
+     */
     protected function _showInfo()
     {
         
@@ -382,8 +450,8 @@ class Libs_Core
 
     /**
      * create list of rooms with their status
-     * @param date $from
-     * @param date $to
+     * @param string $from
+     * @param string $to
      */
     protected function _roomsRender($from, $to)
     {
@@ -455,8 +523,8 @@ class Libs_Core
 
     /**
      * search for locked rooms
-     * @param date $from
-     * @param date $to
+     * @param string $from
+     * @param string $to
      */
     protected function _getLockedRooms($from, $to)
     {
@@ -471,8 +539,8 @@ class Libs_Core
     /**
      * check that room is locked in given date range
      * @param array $room
-     * @param date $from
-     * @param date $to
+     * @param string $from
+     * @param string $to
      */
     protected function _checkIsLocked(array $room, $from, $to)
     {
@@ -490,8 +558,8 @@ class Libs_Core
 
     /**
      * check that send parameters are correct
-     * @param date $from
-     * @param date $to
+     * @param string $from
+     * @param string $to
      * @throws Exception
      */
     protected function _checkRange($from, $to)
@@ -511,10 +579,10 @@ class Libs_Core
 
     /**
      * compare dates, and return boolean TRUE if room is available
-     * @param date $roomFrom
-     * @param date $roomTo
-     * @param date $from
-     * @param date $to
+     * @param string $roomFrom
+     * @param string $roomTo
+     * @param string $from
+     * @param string $to
      * @return bool
      */
     protected function compare($roomFrom, $roomTo, $from, $to)
