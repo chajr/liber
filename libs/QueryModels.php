@@ -2,7 +2,7 @@
 /**
  * @author chajr <chajr@bluetree.pl>
  * @package core
- * @version 0.4.0
+ * @version 0.4.1
  * @copyright chajr/bluetree
  */
 class Libs_QueryModels
@@ -91,7 +91,7 @@ class Libs_QueryModels
     /**
      * remove reservation on given id
      * 
-     * @param $reservationId
+     * @param integer $reservationId
      * @return Libs_Mysql
      */
     static function removeReservation($reservationId)
@@ -108,7 +108,7 @@ class Libs_QueryModels
     /**
      * remove terms on given reservation id
      * 
-     * @param $reservationId
+     * @param integer $reservationId
      * @return Libs_Mysql
      */
     static function removeTerm($reservationId)
