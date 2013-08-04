@@ -2,7 +2,7 @@
 /**
  * @author chajr <chajr@bluetree.pl>
  * @package core
- * @version 0.3.1
+ * @version 0.4.0
  * @copyright chajr/bluetree
  */
 class Libs_QueryModels
@@ -83,6 +83,40 @@ class Libs_QueryModels
             (id_pokoje, data_przyjazdu, data_wyjazdu)
             VALUES
             ('$roomId', '$from', '$to')
+        ";
+
+        return new Libs_Mysql($query);
+    }
+
+    /**
+     * remove reservation on given id
+     * 
+     * @param $reservationId
+     * @return Libs_Mysql
+     */
+    static function removeReservation($reservationId)
+    {
+        $query = "DELETE FROM
+            rezerwacje
+            WHERE
+            id = '$reservationId'
+        ";
+
+        return new Libs_Mysql($query);
+    }
+
+    /**
+     * remove terms on given reservation id
+     * 
+     * @param $reservationId
+     * @return Libs_Mysql
+     */
+    static function removeTerm($reservationId)
+    {
+        $query = "DELETE FROM
+            terminy
+            WHERE
+            id_reservation = '$reservationId'
         ";
 
         return new Libs_Mysql($query);
