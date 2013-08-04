@@ -2,7 +2,7 @@
 /**
  * @author chajr <chajr@bluetree.pl>
  * @package core
- * @version 0.4.1
+ * @version 0.4.2
  * @copyright chajr/bluetree
  */
 class Libs_QueryModels
@@ -72,17 +72,18 @@ class Libs_QueryModels
      * save room reservation range
      * 
      * @param integer $roomId
+     * @param integer $reservationId
      * @param string $from
      * @param string $to
      * @return Libs_Mysql
      */
-    static function saveTerm($roomId, $from, $to)
+    static function saveTerm($roomId, $reservationId, $from, $to)
     {
         $query = "INSERT INTO 
             terminy
-            (id_pokoje, data_przyjazdu, data_wyjazdu)
+            (id_pokoje, id_reservation, data_przyjazdu, data_wyjazdu)
             VALUES
-            ('$roomId', '$from', '$to')
+            ('$roomId', $reservationId, '$from', '$to')
         ";
 
         return new Libs_Mysql($query);
