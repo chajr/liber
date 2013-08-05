@@ -5,4 +5,5 @@
     <option id="user" value=""/>
     <option id="password" value=""/>
     <option id="db_name" value=""/>
+    <option id="mail" value=""/>
 </root>
