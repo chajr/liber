@@ -6,4 +6,6 @@
     <option id="password" value=""/>
     <option id="db_name" value=""/>
     <option id="mail" value=""/>
+    <option id="system_name" value=""/>
+    <option id="system_name2" value=""/>
 </root>
