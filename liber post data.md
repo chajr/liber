@@ -6,7 +6,7 @@ array(3) {
     ["rooms"]=>   array(3) {
         [2]=>     array(4) {
             ["roomId"]=>           string(1) "2"
-            "roomSpace"]=>         string(1) "1"
+            ["roomSpace"]=>        string(1) "1"
             ["spa"]=>              string(1) "1"
             ["dostawka"]=>         string(0) ""
         }
