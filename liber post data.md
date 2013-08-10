@@ -20,7 +20,7 @@ array(3) {
             ["roomId"]=>            string(1) "6"
             ["roomSpace"]=>         string(1) "2"
             ["spa"]=>               string(1) "1"
-            ["dostawka"]=>          string(0) ""
+            ["dostawka"]=>          string(0) "3"
         }
     }
     ["data"]=>   array(9) {
