@@ -1,7 +1,7 @@
 /**
  * @author chajr <chajr@bluetree.pl>
  * @package core
- * @version 0.5.1
+ * @version 0.5.2
  * @copyright chajr/bluetree
  */
 var validatorErrorList = new Array();
@@ -134,11 +134,13 @@ $(document).ready(function()
                     inputs      = {};
                     elementId   = $(this).attr('id');
                     id          = elementId.replace(/room_/, '');
-                    $(this).find('input:checked').each(function()
+
+                    $(this).find('input.spa_price:checked').each(function()
                     {
                         selectedRooms[id]['spa'] = 1;
                     });
-                    $(this).find('input:selected').each(function()
+
+                    $(this).find('input.dostawka_price:checked').each(function()
                     {
                         selectedRooms[id]['dostawka'] = $(this).attr('value');
                     });
