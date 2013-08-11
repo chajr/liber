@@ -1,7 +1,7 @@
 /**
  * @author chajr <chajr@bluetree.pl>
  * @package core
- * @version 0.5.2
+ * @version 0.5.3
  * @copyright chajr/bluetree
  */
 var validatorErrorList = new Array();
@@ -240,6 +240,8 @@ $(document).ready(function()
         fullPrice   = $('#price_summary i').html();
         price       = $(this).parent().find('span i').html();
         isChecked   = $(this).is(':checked');
+        basePrice   = $(this).parent().parent().find('.price i').html();
+        price      -= basePrice;
 
         if (isChecked) {
             finalPrice = parseFloat(fullPrice) + parseFloat(price);
