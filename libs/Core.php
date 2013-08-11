@@ -2,7 +2,7 @@
 /**
  * @author chajr <chajr@bluetree.pl>
  * @package core
- * @version 0.14.0
+ * @version 0.14.1
  * @copyright chajr/bluetree
  */
 class Libs_Core
@@ -232,9 +232,9 @@ class Libs_Core
         if(!$mailer->Send()) {
             throw new Exception(
                 'Błąd podczas wysyłania maila do użytkownika.
-                 Skontaktuj się z obsługą hotelu aby potwierdić rezerwację.'
+                 Skontaktuj się z obsługą hotelu aby potwierdić rezerwację.
+                 <br/><br/>' . $mailer->ErrorInfo
             );
-            echo "Mailer Error: " . $mailer->ErrorInfo;
         }
 
         $mailer = new PHPMailer();
@@ -248,10 +248,10 @@ class Libs_Core
 
         if(!$mailer->Send()) {
             throw new Exception(
-                'Błąd podczas wysyłania maila do administracji.
-                 Skontaktuj się z obsługą hotelu aby potwierdić rezerwację.'
+                'Błąd podczas wysyłania maila do użytkownika.
+                 Skontaktuj się z obsługą hotelu aby potwierdić rezerwację.
+                 <br/><br/>' . $mailer->ErrorInfo
             );
-            echo "Mailer Error: " . $mailer->ErrorInfo;
         }
     }
 
