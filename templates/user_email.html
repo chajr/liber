@@ -6,10 +6,10 @@
                 margin: 10px 0;
                 border: 1px solid #000;
             }
-            table thead th, table thead th td{
+            table thead{
                 background-color: #aaa;
             }
-            table tr:nth-child(n+1){
+            table tbody tr.color{
                 background-color: #ddd;
             }
             .price{
@@ -64,18 +64,18 @@
                 </th>
             </thead>
             <tbody>
-            {;start;rooms;}
-            <tr>
-                <td>{;rooms;counter;}</td>
-                <td>{;rooms;room_number;}</td>
-                <td>{;rooms;spa;}</td>
-                <td>{;rooms;reserved_space;}</td>
-                <td>{;rooms;description;}</td>
-                <td>{;rooms;floor;}</td>
-                <td>{;rooms;dostawka;}</td>
-                <td>{;rooms;room_price;}</td>
-            </tr>
-            {;end;rooms;}
+                {;start;rooms;}
+                <tr class="{;rooms;class;}">
+                    <td>{;rooms;counter;}</td>
+                    <td>{;rooms;room_number;}</td>
+                    <td>{;rooms;spa;}</td>
+                    <td>{;rooms;reserved_space;}</td>
+                    <td>{;rooms;description;}</td>
+                    <td>{;rooms;floor;}</td>
+                    <td>{;rooms;dostawka;}</td>
+                    <td>{;rooms;room_price;}</td>
+                </tr>
+                {;end;rooms;}
             </tbody>
         </table>
         <hr/>
