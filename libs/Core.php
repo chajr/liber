@@ -2,7 +2,7 @@
 /**
  * @author chajr <chajr@bluetree.pl>
  * @package core
- * @version 0.12.0
+ * @version 0.13.0
  * @copyright chajr/bluetree
  */
 class Libs_Core
@@ -254,6 +254,7 @@ class Libs_Core
         $roomsDetails   = array();
         $counter        = 0;
         $finalPrice     = 0;
+        $tableClass     = 0;
 
         foreach ($_POST['rooms'] as $room) {
             $roomPrice      = 0;
@@ -263,6 +264,14 @@ class Libs_Core
                 $room['roomId'],
                 $room['roomSpace']
             );
+
+            if ($tableClass) {
+                $tableClassName = 'color';
+                $tableClass     = FALSE;
+            } else {
+                $tableClassName = '';
+                $tableClass     = TRUE;
+            }
 
             if ($room['spa']) {
                 $roomPrice  += $roomPriceModel['spa'];
@@ -290,6 +299,7 @@ class Libs_Core
                 'floor'             => $roomDetails['floor'],
                 'dostawka'          => $dostawka,
                 'room_price'        => $roomPrice,
+                'class'             => $tableClassName,
             );
         }
 
