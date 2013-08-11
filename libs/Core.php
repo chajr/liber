@@ -2,7 +2,7 @@
 /**
  * @author chajr <chajr@bluetree.pl>
  * @package core
- * @version 0.13.0
+ * @version 0.14.0
  * @copyright chajr/bluetree
  */
 class Libs_Core
@@ -217,8 +217,9 @@ class Libs_Core
      */
     protected function _sendInfo()
     {
-        $userEmail = $this->_prepareUserEmail();
-        
+        $userEmail  = $this->_prepareUserEmail();
+        $adminEmail = $this->_prepareAdminEmail($userEmail[0], $userEmail[2]);
+
         $mailer = new PHPMailer();
         $mailer->Encoding = "8bit";
         $mailer->CharSet = "UTF-8";
@@ -231,7 +232,24 @@ class Libs_Core
         if(!$mailer->Send()) {
             throw new Exception(
                 'Błąd podczas wysyłania maila do użytkownika.
-                 Skontaktuj sięz obsługą hotelu aby potwierdić rezerwację.'
+                 Skontaktuj się z obsługą hotelu aby potwierdić rezerwację.'
+            );
+            echo "Mailer Error: " . $mailer->ErrorInfo;
+        }
+
+        $mailer = new PHPMailer();
+        $mailer->Encoding = "8bit";
+        $mailer->CharSet = "UTF-8";
+        $mailer->AddReplyTo($this->_options['mail']);
+        $mailer->SetFrom($this->_options['mail']);
+        $mailer->AddAddress($this->_options['mail']);
+        $mailer->Subject = 'Nowa rezerwacja: ' . $_POST['from'] . ' - ' . $_POST['to'];
+        $mailer->MsgHTML($adminEmail);
+
+        if(!$mailer->Send()) {
+            throw new Exception(
+                'Błąd podczas wysyłania maila do administracji.
+                 Skontaktuj się z obsługą hotelu aby potwierdić rezerwację.'
             );
             echo "Mailer Error: " . $mailer->ErrorInfo;
         }
@@ -309,9 +327,11 @@ class Libs_Core
         return array($roomsDetails, $userEmail->render() ,$finalPrice);
     }
 
-    protected function _prepareAdminEmail()
+    protected function _prepareAdminEmail($roomsDetails, $finalPrice)
     {
+        $adminEmail = new Libs_Render('admin_email');
 
+        return $adminEmail->render();
     }
 
     /**
