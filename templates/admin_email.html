@@ -1,0 +1,114 @@
+<html>
+    <head>
+        <style>
+            table{
+                text-align: center;
+                margin: 10px 0;
+                border: 1px solid #000;
+            }
+            table thead{
+                background-color: #aaa;
+            }
+            table tbody tr.color{
+                background-color: #ddd;
+            }
+            .price{
+                font-size: 20px;
+            }
+            .price span{
+                font-weight: bold;
+            }
+            .title{
+                font-size: 26px;
+            }
+            .important{
+                margin: 10px 0;
+                font-weight: 20px;
+                font-weight: bold;
+            }
+        </style>
+    </head>
+    <body>
+        <div class="title">
+            Nowa rezerwacja.
+        </div>
+        Szczeguły rezerwacji:<br/>
+        Termin: {;term;}<br/>
+        <table width="100%">
+            <thead>
+            <th>
+                <td width="10%">
+                    L.p.
+                </td>
+                <td width="10%">
+                    Numer pokoju
+                </td>
+                <td width="10%">
+                    Zabieg SPA
+                </td>
+                <td width="10%">
+                    Ilość wybranych miejsc
+                </td>
+                <td width="30%">
+                    Opis
+                </td>
+                <td width="10%">
+                    Piętro
+                </td>
+                <td width="10%">
+                    Dostawka
+                </td>
+                <td width="10%">
+                    Cena za pokój
+                </td>
+            </th>
+            </thead>
+            <tbody>
+            {;start;rooms;}
+            <tr class="{;rooms;class;}">
+                <td>{;rooms;counter;}</td>
+                <td>{;rooms;room_number;}</td>
+                <td>{;rooms;spa;}</td>
+                <td>{;rooms;reserved_space;}</td>
+                <td>{;rooms;description;}</td>
+                <td>{;rooms;floor;}</td>
+                <td>{;rooms;dostawka;}</td>
+                <td>{;rooms;room_price;}</td>
+            </tr>
+            {;end;rooms;}
+            </tbody>
+        </table>
+        <hr/>
+        Dane rezerwującego:
+        <div>
+            <p>
+                Imie: {;imie;}
+            </p>
+            <p>
+                Nazwisko: {;nazwisko;}
+            </p>
+            <p>
+                Ulica: {;ulica;}
+            </p>
+            <p>
+                Numer domu/mieszkania: {;numer;}
+            </p>
+            <p>
+                Miasto: {;miasto;}
+            </p>
+            <p>
+                Kod pocztowy: {;kod;}
+            </p>
+            <p>
+                telefon: {;telefon;}
+            </p>
+            <p>
+                Email: {;mail;}
+            </p>
+        </div>
+        <hr/>
+        <div class="price">
+            Łączna cena za wybrane usługi: <span>{;price_sum;} zł</span>
+        </div>
+    </body>
+</html>
