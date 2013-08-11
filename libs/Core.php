@@ -2,7 +2,7 @@
 /**
  * @author chajr <chajr@bluetree.pl>
  * @package core
- * @version 0.11.1
+ * @version 0.12.0
  * @copyright chajr/bluetree
  */
 class Libs_Core
@@ -105,8 +105,8 @@ class Libs_Core
 
             case 'submit':
                 $this->_validateForm();
-                $reservationId = $this->_saveReservation();
-                $this->_saveTerm($reservationId);
+                //$reservationId = $this->_saveReservation();
+                //$this->_saveTerm($reservationId);
                 $this->_sendInfo();
                 $this->_showInfo();
                 break;
@@ -217,7 +217,91 @@ class Libs_Core
      */
     protected function _sendInfo()
     {
+        $userEmail = $this->_prepareUserEmail();
         
+        $mailer = new PHPMailer();
+        $mailer->Encoding = "8bit";
+        $mailer->CharSet = "UTF-8";
+        $mailer->AddReplyTo($this->_options['mail']);
+        $mailer->SetFrom($this->_options['mail']);
+        $mailer->AddAddress($_POST['data'][7]['value']);
+        $mailer->Subject = 'Rezerwacja w Hotelu Arka';
+        $mailer->MsgHTML($userEmail[1]);
+
+        if(!$mailer->Send()) {
+            throw new Exception(
+                'Błąd podczas wysyłania maila do użytkownika.
+                 Skontaktuj sięz obsługą hotelu aby potwierdić rezerwację.'
+            );
+            echo "Mailer Error: " . $mailer->ErrorInfo;
+        }
+    }
+
+    /**
+     * prepare data for user email, and create email template
+     * return selected rooms details, and rendered template for user email
+     * 
+     * @return array
+     */
+    protected function _prepareUserEmail()
+    {
+        $userEmail = new Libs_Render('user_email');
+
+        $userEmail->generate('system_name', $this->_options['system_name']);
+        $userEmail->generate('system_name2', $this->_options['system_name2']);
+        $userEmail->generate('term', $_POST['from'] . ' - ' . $_POST['to']);
+
+        $roomsDetails   = array();
+        $counter        = 0;
+        $finalPrice     = 0;
+
+        foreach ($_POST['rooms'] as $room) {
+            $roomPrice      = 0;
+            $roomQuery      = Libs_QueryModels::getRooms($room['roomId']);
+            $roomDetails    = $roomQuery->result();
+            $roomPriceModel = $this->_createPriceModel(
+                $room['roomId'],
+                $room['roomSpace']
+            );
+
+            if ($room['spa']) {
+                $roomPrice  += $roomPriceModel['spa'];
+                $room['spa'] = 'Tak';
+            } else {
+                $roomPrice  += $roomPriceModel['normal'];
+                $room['spa'] = 'Nie';
+            }
+
+            if ($room['dostawka']) {
+                $roomPrice += $roomPriceModel['dostawka'][$room['dostawka']];
+                $dostawka   = $roomPriceModel['dostawka'][$room['dostawka']];
+            } else {
+                $dostawka = '';
+            }
+
+            $finalPrice += $roomPrice;
+
+            $roomsDetails[$room['roomId']] = array(
+                'counter'           => ++$counter,
+                'room_number'       => $roomDetails['number'],
+                'spa'               => $room['spa'],
+                'reserved_space'    => $room['roomSpace'],
+                'description'       => $roomDetails['description'],
+                'floor'             => $roomDetails['floor'],
+                'dostawka'          => $dostawka,
+                'room_price'        => $roomPrice,
+            );
+        }
+
+        $userEmail->loop('rooms', $roomsDetails);
+        $userEmail->generate('price_sum', $finalPrice);
+
+        return array($roomsDetails, $userEmail->render() ,$finalPrice);
+    }
+
+    protected function _prepareAdminEmail()
+    {
+
     }
 
     /**
