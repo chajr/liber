@@ -2,7 +2,7 @@
 /**
  * @author chajr <chajr@bluetree.pl>
  * @package core
- * @version 0.14.1
+ * @version 0.15.0
  * @copyright chajr/bluetree
  */
 class Libs_Core
@@ -105,8 +105,8 @@ class Libs_Core
 
             case 'submit':
                 $this->_validateForm();
-                //$reservationId = $this->_saveReservation();
-                //$this->_saveTerm($reservationId);
+                $reservationId = $this->_saveReservation();
+                $this->_saveTerm($reservationId);
                 $this->_sendInfo();
                 $this->_showInfo();
                 break;
@@ -223,8 +223,8 @@ class Libs_Core
         $mailer = new PHPMailer();
         $mailer->Encoding = "8bit";
         $mailer->CharSet = "UTF-8";
-        $mailer->AddReplyTo($this->_options['mail']);
-        $mailer->SetFrom($this->_options['mail']);
+        $mailer->AddReplyTo($this->_options['mail'], $this->_options['system_name']);
+        $mailer->SetFrom($this->_options['mail'], $this->_options['system_name']);
         $mailer->AddAddress($_POST['data'][7]['value']);
         $mailer->Subject = 'Rezerwacja w Hotelu Arka';
         $mailer->MsgHTML($userEmail[1]);
@@ -240,8 +240,8 @@ class Libs_Core
         $mailer = new PHPMailer();
         $mailer->Encoding = "8bit";
         $mailer->CharSet = "UTF-8";
-        $mailer->AddReplyTo($this->_options['mail']);
-        $mailer->SetFrom($this->_options['mail']);
+        $mailer->AddReplyTo($this->_options['mail'], $this->_options['system_name']);
+        $mailer->SetFrom($this->_options['mail'], $this->_options['system_name']);
         $mailer->AddAddress($this->_options['mail']);
         $mailer->Subject = 'Nowa rezerwacja: ' . $_POST['from'] . ' - ' . $_POST['to'];
         $mailer->MsgHTML($adminEmail);
@@ -327,9 +327,24 @@ class Libs_Core
         return array($roomsDetails, $userEmail->render() ,$finalPrice);
     }
 
-    protected function _prepareAdminEmail($roomsDetails, $finalPrice)
+    /**
+     * prepare data for administration email, and create email template
+     * 
+     * @param $roomsDetails array
+     * @param $finalPrice float
+     * @return string
+     */
+    protected function _prepareAdminEmail(array $roomsDetails, $finalPrice)
     {
         $adminEmail = new Libs_Render('admin_email');
+
+        $adminEmail->generate('term', $_POST['from'] . ' - ' . $_POST['to']);
+        $adminEmail->loop('rooms', $roomsDetails);
+        $adminEmail->generate('price_sum', $finalPrice);
+
+        foreach ($_POST['data'] as $information) {
+            $adminEmail->generate($information['name'], $information['value']);
+        }
 
         return $adminEmail->render();
     }
