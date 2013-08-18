@@ -2,7 +2,7 @@
 /**
  * @author chajr <chajr@bluetree.pl>
  * @package core
- * @version 0.15.0
+ * @version 0.15.1
  * @copyright chajr/bluetree
  */
 class Libs_Core
@@ -659,8 +659,10 @@ class Libs_Core
     {
         $currentTime    = strftime('%Y-%m-%d');
         $terms          = Libs_QueryModels::getTerms($currentTime);
-        if ($terms->result(1)) {
-            foreach ($terms->result(1) as $room) {
+        $lockedRooms    = $terms->result(1);
+
+        if ($lockedRooms) {
+            foreach ($lockedRooms as $room) {
                 $this->_checkIsLocked($room, $from, $to);
             }
         }
