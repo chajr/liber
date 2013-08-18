@@ -310,3 +310,6 @@ b{
 .reservation_details table tbody tr.color{
     background-color: #dfd095;
 }
+.reservation_details table td, .reservation_details table th{
+    padding:10px;
+}
