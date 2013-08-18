@@ -1,7 +1,7 @@
 /**
  * @author chajr <chajr@bluetree.pl>
  * @package core
- * @version 0.5.3
+ * @version 0.6.0
  * @copyright chajr/bluetree
  */
 var validatorErrorList = new Array();
@@ -193,6 +193,7 @@ $(document).ready(function()
                             $('#breadcrumbs li:eq(3)')  .addClass('visited');
                             $('#breadcrumbs li:eq(4)')  .addClass('selected');
                             $('#result_contact')        .hide();
+                            $('#steps')        .hide();
                             step++;
                         }
                     );

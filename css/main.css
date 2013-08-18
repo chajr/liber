@@ -281,3 +281,32 @@ input{
 #regulamin{
     margin-top: 15px;
 }
+.ok{
+    margin-top: 10px;
+    border: 1px solid darkgreen;
+    background-color: lightgreen;
+    color: darkgreen;
+    text-align: center;
+    padding: 10px 0;
+    font-size: 16px;
+}
+.reservation_details{
+    padding:15px;
+}
+.reservation_details h3{
+    font-size: 18px;
+}
+b{
+    font-weight: bold;
+}
+.reservation_details table{
+    text-align: center;
+    margin: 10px 0;
+    border: 1px solid #000;
+}
+.reservation_details table thead{
+    background-color: #ccb042;
+}
+.reservation_details table tbody tr.color{
+    background-color: #dfd095;
+}

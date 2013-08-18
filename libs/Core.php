@@ -2,7 +2,7 @@
 /**
  * @author chajr <chajr@bluetree.pl>
  * @package core
- * @version 0.15.1
+ * @version 0.16.0
  * @copyright chajr/bluetree
  */
 class Libs_Core
@@ -30,6 +30,18 @@ class Libs_Core
      * @var float
      */
     protected $_priceSum;
+
+    /**
+     * contains all reserved rooms and their details to display
+     * @var array
+     */
+    protected $_roomsDetails = array();
+
+    /**
+     * contains final calculated price of reserved rooms
+     * @var int
+     */
+    protected $_finalPrice = 0;
 
     /**
      * start liber core class
@@ -218,7 +230,7 @@ class Libs_Core
     protected function _sendInfo()
     {
         $userEmail  = $this->_prepareUserEmail();
-        $adminEmail = $this->_prepareAdminEmail($userEmail[0], $userEmail[2]);
+        $adminEmail = $this->_prepareAdminEmail();
 
         $mailer = new PHPMailer();
         $mailer->Encoding = "8bit";
@@ -227,7 +239,7 @@ class Libs_Core
         $mailer->SetFrom($this->_options['mail'], $this->_options['system_name']);
         $mailer->AddAddress($_POST['data'][7]['value']);
         $mailer->Subject = 'Rezerwacja w Hotelu Arka';
-        $mailer->MsgHTML($userEmail[1]);
+        $mailer->MsgHTML($userEmail);
 
         if(!$mailer->Send()) {
             throw new Exception(
@@ -257,9 +269,9 @@ class Libs_Core
 
     /**
      * prepare data for user email, and create email template
-     * return selected rooms details, and rendered template for user email
+     * return rendered template for user email
      * 
-     * @return array
+     * @return string
      */
     protected function _prepareUserEmail()
     {
@@ -269,9 +281,7 @@ class Libs_Core
         $userEmail->generate('system_name2', $this->_options['system_name2']);
         $userEmail->generate('term', $_POST['from'] . ' - ' . $_POST['to']);
 
-        $roomsDetails   = array();
         $counter        = 0;
-        $finalPrice     = 0;
         $tableClass     = 0;
 
         foreach ($_POST['rooms'] as $room) {
@@ -306,9 +316,9 @@ class Libs_Core
                 $dostawka = '';
             }
 
-            $finalPrice += $roomPrice;
+            $this->_finalPrice += $roomPrice;
 
-            $roomsDetails[$room['roomId']] = array(
+            $this->_roomsDetails[$room['roomId']] = array(
                 'counter'           => ++$counter,
                 'room_number'       => $roomDetails['number'],
                 'spa'               => $room['spa'],
@@ -321,26 +331,24 @@ class Libs_Core
             );
         }
 
-        $userEmail->loop('rooms', $roomsDetails);
-        $userEmail->generate('price_sum', $finalPrice);
+        $userEmail->loop('rooms', $this->_roomsDetails);
+        $userEmail->generate('price_sum', $this->_finalPrice);
 
-        return array($roomsDetails, $userEmail->render() ,$finalPrice);
+        return $userEmail->render();
     }
 
     /**
      * prepare data for administration email, and create email template
      * 
-     * @param $roomsDetails array
-     * @param $finalPrice float
      * @return string
      */
-    protected function _prepareAdminEmail(array $roomsDetails, $finalPrice)
+    protected function _prepareAdminEmail()
     {
         $adminEmail = new Libs_Render('admin_email');
 
         $adminEmail->generate('term', $_POST['from'] . ' - ' . $_POST['to']);
-        $adminEmail->loop('rooms', $roomsDetails);
-        $adminEmail->generate('price_sum', $finalPrice);
+        $adminEmail->loop('rooms', $this->_roomsDetails);
+        $adminEmail->generate('price_sum', $this->_finalPrice);
 
         foreach ($_POST['data'] as $information) {
             $adminEmail->generate($information['name'], $information['value']);
@@ -417,7 +425,13 @@ class Libs_Core
      */
     protected function _showInfo()
     {
-        
+        $successTemplate = new Libs_Render('success');
+
+        $successTemplate->loop('rooms', $this->_roomsDetails);
+        $successTemplate->generate('final_price', $this->_finalPrice);
+        $successTemplate->generate('term', $_POST['from'] . ' - ' . $_POST['to']);
+
+        $this->_display = $successTemplate->render();
     }
 
     /**

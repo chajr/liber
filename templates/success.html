@@ -1,0 +1,63 @@
+<div class="ok container_24">
+    <i class="icon-ok-circle"></i>
+    Rezerwacja została złożona poprawnie.
+</div>
+<div class="rooms container_24">
+    <div class="reservation_details">
+        <h3>
+            W celu potwierdzenia rezerwacji obsługa hotelu skontaktuje się
+            z państwem.
+        </h3>
+        <br/><br/>
+        Szczegóły rezerwacji:
+        <br/><br/>
+        Termin: {;term;}
+        <br/>
+        <table width="100%">
+            <thead>
+            <th>
+                <td width="10%">
+                    L.p.
+                </td>
+                <td width="10%">
+                    Numer pokoju
+                </td>
+                <td width="10%">
+                    Zabieg SPA
+                </td>
+                <td width="10%">
+                    Ilość wybranych miejsc
+                </td>
+                <td width="30%">
+                    Opis
+                </td>
+                <td width="10%">
+                    Piętro
+                </td>
+                <td width="10%">
+                    Dostawka
+                </td>
+                <td width="10%">
+                    Cena za pokój
+                </td>
+            </th>
+            </thead>
+            <tbody>
+            {;start;rooms;}
+            <tr class="{;rooms;class;}">
+                <td>{;rooms;counter;}</td>
+                <td>{;rooms;room_number;}</td>
+                <td>{;rooms;spa;}</td>
+                <td>{;rooms;reserved_space;}</td>
+                <td>{;rooms;description;}</td>
+                <td>{;rooms;floor;}</td>
+                <td>{;rooms;dostawka;}</td>
+                <td>{;rooms;room_price;}</td>
+            </tr>
+            {;end;rooms;}
+            </tbody>
+        </table>
+        <br/>
+        Łączna cena: <b>{;final_price;}</b>
+    </div>
+</div>
