@@ -1,7 +1,7 @@
 /**
  * @author chajr <chajr@bluetree.pl>
  * @package core
- * @version 0.6.0
+ * @version 0.7.0
  * @copyright chajr/bluetree
  */
 var validatorErrorList = new Array();
@@ -85,11 +85,13 @@ $(document).ready(function()
                             function (data)
                             {
                                 $('#result_rooms')          .html(data);
+                                $('#result_rooms')          .show();
                                 $('#splash_screen')         .hide();
                                 $('#breadcrumbs li:eq(0)')  .removeClass('selected');
                                 $('#breadcrumbs li:eq(0)')  .addClass('visited');
                                 $('#breadcrumbs li:eq(1)')  .addClass('selected');
                                 $('#calendar')              .hide();
+                                $('#steps .previous')       .removeClass('disabled');
                                 step++;
                             }
                         );
@@ -116,6 +118,7 @@ $(document).ready(function()
                         function (data)
                         {
                             $('#result_payment')        .html(data);
+                            $('#result_payment')        .show();
                             $('#splash_screen')         .hide();
                             $('#breadcrumbs li:eq(1)')  .removeClass('selected');
                             $('#breadcrumbs li:eq(1)')  .addClass('visited');
@@ -152,6 +155,7 @@ $(document).ready(function()
                     function (data)
                     {
                         $('#result_contact')        .html(data);
+                        $('#result_contact')        .show();
                         $('#splash_screen')         .hide();
                         $('#breadcrumbs li:eq(2)')  .removeClass('selected');
                         $('#breadcrumbs li:eq(2)')  .addClass('visited');
@@ -188,6 +192,7 @@ $(document).ready(function()
                         function (data)
                         {
                             $('#result_end')            .html(data);
+                            $('#result_end')            .show();
                             $('#splash_screen')         .hide();
                             $('#breadcrumbs li:eq(3)')  .removeClass('selected');
                             $('#breadcrumbs li:eq(3)')  .addClass('visited');
@@ -207,7 +212,44 @@ $(document).ready(function()
 
     $('#steps .previous').click(function()
     {
+        if (step > 0) {
+            showSpiner();
+            $('#splash_screen').show();
 
+            switch (step) {
+                case 1:
+                    $('#breadcrumbs li:eq(0)')  .addClass('selected');
+                    $('#breadcrumbs li:eq(0)')  .removeClass('visited');
+                    $('#breadcrumbs li:eq(1)')  .removeClass('selected');
+                    $('#calendar')              .show();
+                    $('#result_rooms')          .hide();
+                    $('#splash_screen')         .hide();
+                    $('#steps .previous')       .addClass('disabled');
+                    step--;
+                    selectedRooms = {};
+                    break;
+
+                case 2:
+                    $('#result_payment')        .hide();
+                    $('#splash_screen')         .hide();
+                    $('#breadcrumbs li:eq(1)')  .addClass('selected');
+                    $('#breadcrumbs li:eq(1)')  .removeClass('visited');
+                    $('#breadcrumbs li:eq(2)')  .removeClass('selected');
+                    $('#result_rooms')          .show();
+                    step--;
+                    break;
+
+                case 3:
+                    $('#breadcrumbs li:eq(2)')  .addClass('selected');
+                    $('#breadcrumbs li:eq(2)')  .removeClass('visited');
+                    $('#breadcrumbs li:eq(3)')  .removeClass('selected');
+                    $('#result_contact')        .hide();
+                    $('#result_payment')        .show();
+                    $('#splash_screen').hide();
+                    step--;
+                    break;
+            }
+        }
     });
 
     $('body').on('click', '.room.unselected .select', function()
