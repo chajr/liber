@@ -4,7 +4,7 @@
  * 
  * @author chajr <chajr@bluetree.pl>
  * @package core
- * @version 0.5.0
+ * @version 1.0.0
  * @copyright chajr/bluetree
  */
 define('BASE_PATH', dirname(__FILE__));
@@ -12,7 +12,6 @@ require_once 'libs/Core.php';
 require_once 'libs/Connection.php';
 require_once 'libs/Mysql.php';
 require_once 'libs/Render.php';
-require_once 'libs/Form.php';
 require_once 'libs/Valid.php';
 require_once 'libs/Xml.php';
 require_once 'libs/QueryModels.php';
