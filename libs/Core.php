@@ -2,7 +2,7 @@
 /**
  * @author chajr <chajr@bluetree.pl>
  * @package core
- * @version 0.16.0
+ * @version 1.0.0
  * @copyright chajr/bluetree
  */
 class Libs_Core

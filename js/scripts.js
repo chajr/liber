@@ -1,7 +1,7 @@
 /**
  * @author chajr <chajr@bluetree.pl>
  * @package core
- * @version 0.7.0
+ * @version 1.0.0
  * @copyright chajr/bluetree
  */
 var validatorErrorList = new Array();
