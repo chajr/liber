@@ -2,7 +2,7 @@
 /**
  * @author chajr <chajr@bluetree.pl>
  * @package core
- * @version 1.0.0
+ * @version 1.0.1
  * @copyright chajr/bluetree
  */
 class Libs_Core
@@ -62,7 +62,7 @@ class Libs_Core
         $xml->loadFile(BASE_PATH . '/cfg/main.xml', TRUE);
         $block = $xml->documentElement;
         if (!$block) {
-            throw Exception($xml->err);
+            throw new Exception($xml->err);
         }
         foreach ($block->childNodes as $nod) {
             if ($nod->nodeType != 1) {
