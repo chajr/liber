@@ -1,0 +1,19 @@
+body{
+    background-color: #3A3F42;
+}
+footer {
+    background-color: #2A2E2F;
+    border-top: 1px solid #A5A7A7;
+    bottom: 0;
+    height: 40px;
+    position: fixed;
+    width: 100%;
+}
+header {
+    color: #D4D7D7;
+    background-color: #2A2E2F;
+    border-bottom: 1px solid #A5A7A7;
+    height: 60px;
+    padding: 10px;
+    width: auto;
+}
