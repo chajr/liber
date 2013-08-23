@@ -7,7 +7,7 @@
  *
  * @author chajr <chajr@bluetree.pl>
  * @package core
- * @version 1.1.1
+ * @version 1.1.2
  * @copyright chajr/bluetree
  */
 class Libs_Render
@@ -141,14 +141,14 @@ class Libs_Render
      * @uses Libs_Render::$_DISPLAY
      * @example layout('nazwa_layoutu')
      * @example layout('nazwa_layoutu', 'mod')
-     * @throws coreException core_error_2
+     * @throws Exception core_error_2
      */
     public function layout($layout, $mod = 'core')
     {
         $path = BASE_PATH . "/templates/$layout.html";
         $this->_DISPLAY[$mod] = file_get_contents($path);
         if (!$this->_DISPLAY[$mod]) {
-            throw new coreException('core_error_2', $mod.' - '.$path);
+            throw new Exception('core_error_2 '. $mod.' - '.$path);
         }
     }
     /**
