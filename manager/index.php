@@ -4,13 +4,14 @@
  *
  * @author chajr <chajr@bluetree.pl>
  * @package core
- * @version 0.2.0
+ * @version 0.3.0
  * @copyright chajr/bluetree
  */
 $path = str_replace('/manager', '', dirname(__FILE__));
 define('BASE_PATH', $path);
 require_once BASE_PATH . '/libs/Core.php';
 require_once BASE_PATH . '/libs/admin/Core.php';
+require_once BASE_PATH . '/libs/admin/Loger.php';
 require_once BASE_PATH . '/libs/QueryModels.php';
 require_once BASE_PATH . '/libs/admin/QueryModels.php';
 require_once BASE_PATH . '/libs/Connection.php';
