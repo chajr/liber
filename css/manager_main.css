@@ -9,6 +9,9 @@ footer {
     height: 40px;
     position: fixed;
     width: 100%;
+    padding-top: 5px;
+    padding-right: 5px;
+    text-align: right;
 }
 header {
     background-color: #2A2E2F;
