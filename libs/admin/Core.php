@@ -2,7 +2,7 @@
 /**
  * @author chajr <chajr@bluetree.pl>
  * @package admin
- * @version 0.3.0
+ * @version 0.4.0
  * @copyright chajr/bluetree
  */
 class Libs_Admin_Core
@@ -44,6 +44,9 @@ class Libs_Admin_Core
 
         if ($isLoggedIn) {
             switch ($_GET['page']) {
+                case 'log_out':
+                    $this->_logOut();
+                    break;
                 default:
                     $this->_baseRender();
                     break;
@@ -89,6 +92,16 @@ class Libs_Admin_Core
         $stream .= $footer->render();
 
         $this->_display = $stream;
+    }
+
+    /**
+     * log off user and show login page with information
+     */
+    protected function _logOut()
+    {
+        Libs_Admin_Loger::logOff();
+        $this->_ok = 'Zostałeś poprawnie wylogowany';
+        $this->_renderLogInPage();
     }
 
     /**
