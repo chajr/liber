@@ -37,3 +37,21 @@ header {
     border-color: #292929;
     padding: 7px 12px;
 }
+#error {
+     background-color: #F0DBE0;
+     border: 1px solid #DA4F49;
+     border-radius: 3px 3px 3px 3px;
+     color: #DA4F49;
+     margin-top: 20px;
+     padding: 10px;
+     text-align: center;
+ }
+#ok{
+    background-color: #D9EFDC;
+    border: 1px solid #63AD18;
+    border-radius: 3px 3px 3px 3px;
+    color: #63AD18;
+    margin-top: 20px;
+    padding: 10px;
+    text-align: center;
+}
