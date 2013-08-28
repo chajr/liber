@@ -2,7 +2,7 @@
 /**
  * @author chajr <chajr@bluetree.pl>
  * @package admin
- * @version 0.2.0
+ * @version 0.3.0
  * @copyright chajr/bluetree
  */
 class Libs_Admin_Core
@@ -59,8 +59,10 @@ class Libs_Admin_Core
         $header         = new Libs_Render('manager_top');
         $footer         = new Libs_Render('manager_bottom');
         $index          = new Libs_Render('manager_index');
+        $menu           = new Libs_Render('manager_menu');
 
         $this->_setAdditionalInformation($header);
+        $header->generate('nav_bar', $menu->render());
 
         $stream = '';
         $stream .= $header->render();
