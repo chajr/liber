@@ -16,10 +16,30 @@
     <body>
         <header>
             <div id="logo">
-    
+                
             </div>
             <div id="descripotion_block">
                 Liber reservation system manager
             </div>
+            {;nav_bar;}
         </header>
         <div class="container">
+            <div class="row">
+                {;op;ok;}
+                <div id="ok" class="col-5 col-offset-3">
+                    <i class="icon-ok-circle"></i>
+                    {;ok;}
+                </div>
+                {;op_end;ok;}
+                {;op;info;}
+                <div id="information">
+                    {;information;}
+                </div>
+                {;op_end;info;}
+                {;op;err;}
+                <div id="error" class="col-5 col-offset-3">
+                    <i class="icon-remove-circle"></i>
+                    {;error;}
+                </div>
+                {;op_end;err;}
+            </div>
