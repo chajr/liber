@@ -32,3 +32,8 @@ header {
     border: 1px solid rgba(0, 0, 0, 0.36);
     color: #C6C8C8;
 }
+.input-group-addon{
+    background-color: #444646;
+    border-color: #292929;
+    padding: 7px 12px;
+}
