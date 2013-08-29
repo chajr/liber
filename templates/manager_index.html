@@ -1,0 +1,68 @@
+<div class="row">
+    <h3>
+        Lista terminów
+    </h3>
+    <table class="table table-hover">
+        <thead>
+            <tr>
+                <th>
+                    Numer terminu
+                </th>
+                <th>
+                    Dane pokoju
+                </th>
+                <th>
+                    Od
+                </th>
+                <th>
+                    Do
+                </th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            {;start;terms;}
+            <tr class="{;terms;class;}">
+                <td>
+                    {;terms;id;}
+                </td>
+                <td>
+                    Ilość miejsc: {;terms;room_space;}<br/>
+                    Numer pokoju: {;terms;room_number;}<br/>
+                    <button type="button"
+                            class="btn btn-default"
+                            data-id="{;terms;id;}"
+                    >
+                        <i class="icon-list"></i>
+                        Szczegóły pokoju
+                    </button>
+                </td>
+                <td>
+                    {;terms;from;}
+                </td>
+                <td>
+                    {;terms;to;}
+                </td>
+                <td>
+                    <button type="button"
+                            class="btn btn-info"
+                            data-id="{;terms;id;}"
+                    >
+                        <i class="icon-info-sign"></i>
+                        Pokaż rezerwacje
+                    </button>
+                    <br/>
+                    <br/>
+                    <button type="button"
+                            class="btn btn-danger"
+                            data-id="{;terms;id;}"
+                    >
+                        <i class="icon-trash"></i>
+                        Usuń termin i wszystkie rezerwacje
+                    </button>
+                </td>
+            </tr>
+            {;end;terms;}
+        </tbody>
+    </table>
+</div>
