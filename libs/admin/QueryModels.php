@@ -2,7 +2,7 @@
 /**
  * @author chajr <chajr@bluetree.pl>
  * @package core
- * @version 0.1.0
+ * @version 0.2.0
  * @copyright chajr/bluetree
  */
 class Libs_Admin_QueryModels
@@ -36,6 +36,18 @@ class Libs_Admin_QueryModels
             admin_logdate = '$logTime'
             WHERE
             admin_id = '$uId'";
+
+        return new Libs_Mysql($query);
+    }
+
+    /**
+     * get all terms from database
+     *
+     * @return Libs_Mysql
+     */
+    static function getTerms ()
+    {
+        $query = "SELECT * FROM terminy ORDER BY data_przyjazdu DESC";
 
         return new Libs_Mysql($query);
     }
