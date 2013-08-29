@@ -73,3 +73,6 @@ nav{
 .table-hover > tbody > tr:hover > td{
     background-color: #272b2c;
 }
+.table{
+    margin-bottom:70px;
+}
