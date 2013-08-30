@@ -71,8 +71,11 @@ nav{
     float: right;
 }
 .table-hover > tbody > tr:hover > td{
-    background-color: #272b2c;
+    background-color: #373b3c;
 }
 .table{
     margin-bottom:70px;
+}
+.modal-content{
+    color: #5C5F5F;
 }
