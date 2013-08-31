@@ -31,7 +31,8 @@
                     Numer pokoju: {;terms;room_number;}<br/>
                     <button type="button"
                             class="btn btn-default"
-                            data-id="{;terms;id;}"
+                            data-toggle="modal"
+                            href="#room_detail_{;terms;id;}"
                     >
                         <i class="icon-list"></i>
                         Szczegóły pokoju
@@ -56,7 +57,7 @@
                     <button type="button"
                             class="btn btn-danger remove_reservation"
                             data-id="{;terms;id;}"
-                            data-toggle="modal" 
+                            data-toggle="modal"
                             href="#remove_confirm"
                     >
                         <i class="icon-trash"></i>
@@ -68,11 +69,54 @@
         </tbody>
     </table>
 </div>
+{;start;room_details;}
+<div class="modal fade"
+     id="room_detail_{;room_details;term_id;}"
+     tabindex="-1"
+     role="dialog"
+     aria-labelledby="Szczegóły pokoju"
+     aria-hidden="true"
+        >
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button"
+                        class="close"
+                        data-dismiss="modal"
+                        aria-hidden="true"
+                >
+                    &times;
+                </button>
+                <h4 class="modal-title">
+                    Szczegóły pokoju: {;room_details;room_number;}
+                </h4>
+            </div>
+            <div class="modal-body">
+                Numer pokoju:   {;room_details;room_number;}<br/>
+                Ilość miejsc:   {;room_details;room_space;}<br/>
+                Dostawka:       {;room_details;dostawka;}<br/>
+                SPA:            {;room_details;spa;}<br/>
+                Piętro:         {;room_details;floor;}<br/>
+                Łączna cena:    {;room_details;price;} zł<br/><br/>
+                Opis:<br/>      {;room_details;room_description;}
+            </div>
+            <div class="modal-footer">
+                <button type="button"
+                        class="btn btn-default remove_reservation_cancel"
+                        data-dismiss="modal"
+                >
+                    Zamknij
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+{;end;room_details;}
 <div class="modal fade"
      id="remove_confirm"
      tabindex="-1"
      role="dialog"
-     aria-labelledby="myModalLabel"
+     aria-labelledby="Potwierdzenie usunięcia"
      aria-hidden="true"
 >
     <div class="modal-dialog">
