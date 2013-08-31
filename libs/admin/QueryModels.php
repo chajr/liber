@@ -2,7 +2,7 @@
 /**
  * @author chajr <chajr@bluetree.pl>
  * @package core
- * @version 0.3.0
+ * @version 0.4.0
  * @copyright chajr/bluetree
  */
 class Libs_Admin_QueryModels
@@ -65,6 +65,25 @@ class Libs_Admin_QueryModels
             $where = " WHERE id = '$reservationId'";
         }
         $query = "SELECT * FROM rezerwacje" . $where;
+
+        return new Libs_Mysql($query);
+    }
+
+    /**
+     * get full data to display room details for specific term on list of term
+     * 
+     * @return Libs_Mysql
+     */
+    static function getRoomsWithTerms()
+    {
+        $query = "SELECT
+            pokoje.*, terminy.id_reservation, .terminy.id_pokoje,
+            rezerwacje.opcje, terminy.id as term_id
+            FROM
+            rezerwacje , terminy, pokoje
+            WHERE
+            terminy.id_reservation = rezerwacje.id
+            AND terminy.id_pokoje = pokoje.id";
 
         return new Libs_Mysql($query);
     }
