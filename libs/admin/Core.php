@@ -2,7 +2,7 @@
 /**
  * @author chajr <chajr@bluetree.pl>
  * @package admin
- * @version 0.4.0
+ * @version 0.5.0
  * @copyright chajr/bluetree
  */
 class Libs_Admin_Core
@@ -65,7 +65,9 @@ class Libs_Admin_Core
         $menu           = new Libs_Render('manager_menu');
 
         $this->_setAdditionalInformation($header);
+        $menu->generate('active_terms', 'active');
         $header->generate('nav_bar', $menu->render());
+        $index->loop('terms', $this->_getTermsList());
 
         $stream = '';
         $stream .= $header->render();
@@ -176,5 +178,145 @@ class Libs_Admin_Core
                 $this->_error = 'Użytkownik nie istnieje, lub źle podane hasło';
             }
         }
+    }
+
+    /**
+     * create array of terms with some special options to display on term list page
+     * 
+     * @return array
+     */
+    protected function _getTermsList()
+    {
+        $terms      = Libs_Admin_QueryModels::getTerms();
+        $fullTerms  = array();
+
+        if ($terms->err) {
+            $this->_error = $terms->err;
+        } else {
+            $termsData = $terms->result(TRUE);
+
+            foreach ($termsData as $index => $term) {
+                $roomData           = $this->_getRoomData($term['id_pokoje']);
+                $reservationData    = $this->_getReservedRoomOption(
+                    $term['id_reservation'],
+                    $term['id_pokoje']
+                );
+                $roomSpace = $this->_calculateDostawka($reservationData);
+
+                $fullTerms[$index]  = array(
+                    'id'            => $term['id'],
+                    'room_space'    => $roomSpace,
+                    'room_number'   => $roomData['number'],
+                    'from'          => $term['data_przyjazdu'],
+                    'to'            => $term['data_wyjazdu'],
+                    'class'         => $this->_getRoomClass(
+                        $term['data_przyjazdu'],
+                        $term['data_wyjazdu']
+                    ),
+                );
+            }
+        }
+
+        return $fullTerms;
+    }
+
+    /**
+     * get full data of given room id
+     * 
+     * @param integer $roomId
+     * @return array
+     */
+    protected function _getRoomData($roomId)
+    {
+        $room = Libs_QueryModels::getRooms($roomId);
+
+        return $room->result();
+    }
+
+    /**
+     * get all options for given reservation id and room
+     * 
+     * @param integer $reservationId
+     * @param integer $roomId
+     * @return array|null
+     */
+    protected function _getReservedRoomOption($reservationId, $roomId)
+    {
+        $reservedSpace      = Libs_Admin_QueryModels::getReservations($reservationId);
+        $reservationData    = $reservedSpace->result();
+        $reservationOptions = unserialize($reservationData['opcje']);
+
+        if ($reservationOptions) {
+            return $this->_getRoomOption($reservationOptions, $roomId);
+        }
+
+        return NULL;
+    }
+
+    /**
+     * get option for given room, from reservation option list
+     * 
+     * @param array $reservationOptions
+     * @param integer $roomId
+     * @return null|integer
+     */
+    protected function _getRoomOption(array $reservationOptions, $roomId)
+    {
+        foreach ($reservationOptions as $option) {
+            if ($option['roomId'] === $roomId) {
+                return $option;
+            }
+        }
+
+        return NULL;
+    }
+
+    /**
+     * return room space with dostawka if their exist
+     * 
+     * @param array $options
+     * @return integer
+     */
+    protected function _calculateDostawka($options)
+    {
+        if ($options['dostawka']) {
+            return $options['roomSpace'] +1;
+        }
+        return $options['roomSpace'];
+    }
+
+    /**
+     * check that reservation term is in future, on in past
+     * and return an special bootstrap class to highlight row on term list
+     * 
+     * @param string $from
+     * @param string $to
+     * @return string bootstrap 3 table rows classes
+     */
+    protected function _getRoomClass($from, $to)
+    {
+        $currentTime    = time();
+        $timeFrom       = strtotime($from);
+        $timeTo         = strtotime($to);
+
+        if ($timeTo < $currentTime) {
+            return 'danger';
+        }
+
+        if ($timeFrom > $currentTime) {
+            return 'success';
+        }
+
+        return '';
+    }
+
+    protected function _getReservationList()
+    {
+        
+    }
+
+    protected function _getReservation($id)
+    {
+        
     }
 }
