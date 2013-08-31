@@ -117,3 +117,9 @@ nav{
 .table-hover > tbody > tr.danger:hover > td {
     background-color: #4a3f42;
 }
+.logo_bigger{
+    display: none;
+    position: absolute;
+    top: -55px;
+    right: 35px;
+}

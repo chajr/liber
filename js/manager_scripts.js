@@ -17,4 +17,13 @@ $(document).ready(function()
     //hide information blocks
     $('#ok').delay(3500).slideUp('slow');
     $('#error').delay(3500).slideUp('slow');
+
+    $('.logo_small').hover(function()
+    {
+        $('.logo_bigger').show();
+    },
+    function()
+    {
+        $('.logo_bigger').hide();
+    });
 });
