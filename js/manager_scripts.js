@@ -13,4 +13,8 @@ $(document).ready(function()
     {
         termToRemove = null;
     });
+
+    //hide information blocks
+    $('#ok').delay(3500).slideUp('slow');
+    $('#error').delay(3500).slideUp('slow');
 });
