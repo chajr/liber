@@ -2,7 +2,7 @@
 /**
  * @author chajr <chajr@bluetree.pl>
  * @package core
- * @version 0.4.0
+ * @version 0.4.1
  * @copyright chajr/bluetree
  */
 class Libs_Admin_QueryModels
@@ -55,10 +55,10 @@ class Libs_Admin_QueryModels
     /**
      * get all reservations or reservation with given id
      * 
-     * @param integer $reservationId
+     * @param integer|boolean $reservationId
      * @return Libs_Mysql
      */
-    static function getReservations($reservationId)
+    static function getReservations($reservationId = NULL)
     {
         $where = '';
         if ($reservationId) {
