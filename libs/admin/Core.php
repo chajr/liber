@@ -2,7 +2,7 @@
 /**
  * @author chajr <chajr@bluetree.pl>
  * @package admin
- * @version 0.8.0
+ * @version 0.9.0
  * @copyright chajr/bluetree
  */
 class Libs_Admin_Core
@@ -96,12 +96,15 @@ class Libs_Admin_Core
         $header         = new Libs_Render('manager_top');
         $footer         = new Libs_Render('manager_bottom');
         $menu           = new Libs_Render('manager_menu');
+        $reservations   = new Libs_Render('manager_reservations');
 
         $menu->generate('active_reservations', 'active');
         $header->generate('nav_bar', $menu->render());
+        $reservations->loop('reservations', $this->_getReservationList());
 
         $stream  = '';
         $stream .= $header->render();
+        $stream .= $reservations->render();
         $stream .= $footer->render();
 
         $this->_display = $stream;
@@ -259,6 +262,34 @@ class Libs_Admin_Core
         }
 
         return $fullTerms;
+    }
+
+    /**
+     * create array of reservations with some special options to display
+     * on reservations list page
+     * 
+     * @return array
+     */
+    protected function _getReservationList()
+    {
+        $reservations       = Libs_Admin_QueryModels::getReservations()->result(TRUE);
+        $fullReservations   = array();
+
+        foreach ($reservations as $reservation) {
+            $fullReservations[] = array(
+                'id'                => $reservation['id'],
+                'term_list'         => '',
+                'email'             => $reservation['mail'],
+                'from'              => $reservation['od'],
+                'to'                => $reservation['do'],
+                'class'             => $this->_getRoomClass(
+                    $reservation['od'],
+                    $reservation['do']
+                ),
+            );
+        }
+
+        return $fullReservations;
     }
 
     /**
@@ -454,11 +485,6 @@ class Libs_Admin_Core
             $roomPrice += $roomPriceModel['dostawka'][$roomOptions['dostawka']];
         }
         return $roomPrice;
-    }
-
-    protected function _getReservationList()
-    {
-        
     }
 
     protected function _getReservation($id)
