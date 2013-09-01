@@ -2,7 +2,7 @@
 /**
  * @author chajr <chajr@bluetree.pl>
  * @package core
- * @version 0.4.1
+ * @version 0.4.2
  * @copyright chajr/bluetree
  */
 class Libs_Admin_QueryModels
@@ -64,7 +64,7 @@ class Libs_Admin_QueryModels
         if ($reservationId) {
             $where = " WHERE id = '$reservationId'";
         }
-        $query = "SELECT * FROM rezerwacje" . $where;
+        $query = "SELECT * FROM rezerwacje" . $where . " ORDER BY od DESC";
 
         return new Libs_Mysql($query);
     }
