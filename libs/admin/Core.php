@@ -2,7 +2,7 @@
 /**
  * @author chajr <chajr@bluetree.pl>
  * @package admin
- * @version 0.5.0
+ * @version 0.6.0
  * @copyright chajr/bluetree
  */
 class Libs_Admin_Core
@@ -68,6 +68,7 @@ class Libs_Admin_Core
         $menu->generate('active_terms', 'active');
         $header->generate('nav_bar', $menu->render());
         $index->loop('terms', $this->_getTermsList());
+        $index->loop('room_details', $this->_getRoomsDetails());
 
         $stream = '';
         $stream .= $header->render();
@@ -258,7 +259,7 @@ class Libs_Admin_Core
      * 
      * @param array $reservationOptions
      * @param integer $roomId
-     * @return null|integer
+     * @return null|array
      */
     protected function _getRoomOption(array $reservationOptions, $roomId)
     {
@@ -308,6 +309,111 @@ class Libs_Admin_Core
         }
 
         return '';
+    }
+
+    /**
+     * create array of room details to be used in modal window for term list
+     * 
+     * @return array
+     */
+    protected function _getRoomsDetails()
+    {
+        $rooms          = Libs_Admin_QueryModels::getRoomsWithTerms();
+        $roomsData      = $rooms->result(TRUE);
+        $roomsDisplay   = array();
+
+        foreach ($roomsData as $room) {
+            $roomOptions = $this->_getRoomOption(
+                unserialize($room['opcje']), $room['id']
+            );
+            $price          = $this->_calculatePriceForRoom($roomOptions);
+            $roomsDisplay[] = array(
+                'term_id'           => $room['term_id'],
+                'room_number'       => $room['number'],
+                'room_space'        => $roomOptions['roomSpace'],
+                'dostawka'          => $this->_changeToString($roomOptions['dostawka']),
+                'type'              => $this->_getDostawkaType($roomOptions['dostawka']),
+                'spa'               => $this->_changeToString($roomOptions['spa']),
+                'floor'             => $room['floor'],
+                'price'             => $price,
+                'room_description'  => $room['description']
+            );
+        }
+
+        return $roomsDisplay;
+    }
+
+    /**
+     * change dostawka number value to description
+     * 
+     * @param integer $dostawka
+     * @return string
+     */
+    protected function _getDostawkaType($dostawka)
+    {
+        $typeString = '';
+        switch ($dostawka) {
+            case 1:
+                $typeString = ' - dla osoby dorosłej';
+                break;
+
+            case 2:
+                $typeString = ' - dla dziecka 10 – 18 lat';
+                break;
+
+            case 3:
+                $typeString = ' - dla dziecka 3 - 10 lat';
+                break;
+
+            default:
+                break;
+        }
+
+        return $typeString;
+    }
+
+    /**
+     * change dostawka number value to string
+     * 
+     * @param interger|string $value
+     * @return string
+     */
+    protected function _changeToString($value)
+    {
+        if ($value) {
+            return 'Tak';
+        }
+        return 'Nie';
+    }
+
+    /**
+     * calculate final room price for given reservation details
+     * 
+     * @param array $roomOptions
+     * @return float|integer
+     */
+    protected function _calculatePriceForRoom(array $roomOptions)
+    {
+        $roomPrice      = 0;
+        $roomPriceModel = $this->_createPriceModel
+            ($roomOptions['roomId'],
+                $roomOptions['roomSpace']
+            );
+
+        if ($roomOptions['dostawka'] === '') {
+            $roomOptions['dostawka'] = 0;
+        }
+
+        if ($roomOptions['spa']) {
+            $roomPrice  += $roomPriceModel['spa'];
+        } else {
+            $roomPrice  += $roomPriceModel['normal'];
+        }
+
+        if ($roomOptions['dostawka']) {
+            $roomPrice += $roomPriceModel['dostawka'][$roomOptions['dostawka']];
+        }
+        return $roomPrice;
     }
 
     protected function _getReservationList()
