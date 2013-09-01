@@ -2,7 +2,7 @@
 /**
  * @author chajr <chajr@bluetree.pl>
  * @package admin
- * @version 0.6.0
+ * @version 0.7.0
  * @copyright chajr/bluetree
  */
 class Libs_Admin_Core
@@ -47,6 +47,12 @@ class Libs_Admin_Core
                 case 'log_out':
                     $this->_logOut();
                     break;
+
+                case 'remove_term':
+                    $this->_removeTermAndReservation();
+                    $this->_baseRender();
+                    break;
+
                 default:
                     $this->_baseRender();
                     break;
@@ -105,6 +111,16 @@ class Libs_Admin_Core
         Libs_Admin_Loger::logOff();
         $this->_ok = 'Zostałeś poprawnie wylogowany';
         $this->_renderLogInPage();
+    }
+
+    /**
+     * remove term and reservations that are related
+     */
+    protected function _removeTermAndReservation()
+    {
+        $reservationId = $_GET['id'];
+        Libs_QueryModels::removeTerm($reservationId);
+        Libs_QueryModels::removeReservation($reservationId);
     }
 
     /**
@@ -205,12 +221,13 @@ class Libs_Admin_Core
                 $roomSpace = $this->_calculateDostawka($reservationData);
 
                 $fullTerms[$index]  = array(
-                    'id'            => $term['id'],
-                    'room_space'    => $roomSpace,
-                    'room_number'   => $roomData['number'],
-                    'from'          => $term['data_przyjazdu'],
-                    'to'            => $term['data_wyjazdu'],
-                    'class'         => $this->_getRoomClass(
+                    'id'                => $term['id'],
+                    'id_reservation'    => $term['id_reservation'],
+                    'room_space'        => $roomSpace,
+                    'room_number'       => $roomData['number'],
+                    'from'              => $term['data_przyjazdu'],
+                    'to'                => $term['data_wyjazdu'],
+                    'class'             => $this->_getRoomClass(
                         $term['data_przyjazdu'],
                         $term['data_wyjazdu']
                     ),
