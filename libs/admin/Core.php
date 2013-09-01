@@ -2,7 +2,7 @@
 /**
  * @author chajr <chajr@bluetree.pl>
  * @package admin
- * @version 0.7.0
+ * @version 0.8.0
  * @copyright chajr/bluetree
  */
 class Libs_Admin_Core
@@ -53,6 +53,10 @@ class Libs_Admin_Core
                     $this->_baseRender();
                     break;
 
+                case 'reservations':
+                    $this->_renderReservations();
+                    break;
+
                 default:
                     $this->_baseRender();
                     break;
@@ -79,6 +83,25 @@ class Libs_Admin_Core
         $stream = '';
         $stream .= $header->render();
         $stream .= $index->render();
+        $stream .= $footer->render();
+
+        $this->_display = $stream;
+    }
+
+    /**
+     * show basic reservation page
+     */
+    protected function _renderReservations()
+    {
+        $header         = new Libs_Render('manager_top');
+        $footer         = new Libs_Render('manager_bottom');
+        $menu           = new Libs_Render('manager_menu');
+
+        $menu->generate('active_reservations', 'active');
+        $header->generate('nav_bar', $menu->render());
+
+        $stream  = '';
+        $stream .= $header->render();
         $stream .= $footer->render();
 
         $this->_display = $stream;
