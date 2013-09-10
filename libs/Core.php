@@ -2,7 +2,7 @@
 /**
  * @author chajr <chajr@bluetree.pl>
  * @package core
- * @version 1.0.1
+ * @version 1.1.0
  * @copyright chajr/bluetree
  */
 class Libs_Core
@@ -42,6 +42,12 @@ class Libs_Core
      * @var int
      */
     protected $_finalPrice = 0;
+
+    /**
+     * contains number of reservation days
+     * @var int
+     */
+    protected $_daysRange = 0;
 
     /**
      * start liber core class
@@ -108,6 +114,7 @@ class Libs_Core
                 break;
 
             case 'payment':
+                $this->_calculateDays($_POST['from'], $_POST['to']);
                 $this->_calculatePrice($_POST['selectedRooms']);
                 break;
 
@@ -116,6 +123,7 @@ class Libs_Core
                 break;
 
             case 'submit':
+                $this->_calculateDays($_POST['from'], $_POST['to']);
                 $this->_validateForm();
                 $reservationId = $this->_saveReservation();
                 $this->_saveTerm($reservationId);
@@ -127,6 +135,20 @@ class Libs_Core
                 $this->_baseRender();
                 break;
         }
+    }
+
+    /**
+     * calculate number of days between dates
+     * @param string $from
+     * @param string $to
+     */
+    protected function _calculateDays($from, $to)
+    {
+        $fromTimestamp = strtotime($from);
+        $toTimestamp   = strtotime($to);
+        $daysTimestamp = $toTimestamp - $fromTimestamp;
+
+        $this->_daysRange = $daysTimestamp /60/60/24;
     }
 
     /**
@@ -326,13 +348,13 @@ class Libs_Core
                 'description'       => $roomDetails['description'],
                 'floor'             => $roomDetails['floor'],
                 'dostawka'          => $dostawka,
-                'room_price'        => $roomPrice,
+                'room_price'        => $roomPrice * $this->_daysRange,
                 'class'             => $tableClassName,
             );
         }
 
         $userEmail->loop('rooms', $this->_roomsDetails);
-        $userEmail->generate('price_sum', $this->_finalPrice);
+        $userEmail->generate('price_sum', $this->_finalPrice * $this->_daysRange);
 
         return $userEmail->render();
     }
@@ -348,7 +370,7 @@ class Libs_Core
 
         $adminEmail->generate('term', $_POST['from'] . ' - ' . $_POST['to']);
         $adminEmail->loop('rooms', $this->_roomsDetails);
-        $adminEmail->generate('price_sum', $this->_finalPrice);
+        $adminEmail->generate('price_sum', $this->_finalPrice * $this->_daysRange);
 
         foreach ($_POST['data'] as $information) {
             $adminEmail->generate($information['name'], $information['value']);
@@ -428,7 +450,10 @@ class Libs_Core
         $successTemplate = new Libs_Render('success');
 
         $successTemplate->loop('rooms', $this->_roomsDetails);
-        $successTemplate->generate('final_price', $this->_finalPrice);
+        $successTemplate->generate(
+            'final_price',
+            $this->_finalPrice * $this->_daysRange
+        );
         $successTemplate->generate('term', $_POST['from'] . ' - ' . $_POST['to']);
 
         $this->_display = $successTemplate->render();
@@ -440,13 +465,14 @@ class Libs_Core
     protected function _getUserForm()
     {
         $userData = new Libs_Render('result_payment');
-        
+
         $this->_display = $userData->render();
     }
 
     /**
      * calculate for selected rooms and render layout for it
      * @param array $selectedRooms
+     * @throws Exception
      */
     protected function _calculatePrice($selectedRooms)
     {
@@ -460,11 +486,16 @@ class Libs_Core
 
                 $priceStream .= $this->_renderPrice($finalPrice);
             }
+        } else {
+            throw new Exception('Brak wybranych pokoi');
         }
 
         $fullPriceLayout = new Libs_Render('payment');
         $fullPriceLayout->generate('rooms', $priceStream);
-        $fullPriceLayout->generate('full_price', $this->_priceSum);
+        $fullPriceLayout->generate(
+            'full_price',
+            $this->_priceSum * $this->_daysRange
+        );
         $this->_display = $fullPriceLayout->render();
     }
 

@@ -1,7 +1,7 @@
 /**
  * @author chajr <chajr@bluetree.pl>
  * @package core
- * @version 1.0.0
+ * @version 1.1.0
  * @copyright chajr/bluetree
  */
 var validatorErrorList = new Array();
@@ -58,19 +58,9 @@ $(document).ready(function()
                 if (from === '' || to === '') {
                     alert('brak dat');
                 } else {
-                    var fromSplit = from.split('-');
-                    var toSplit   = to  .split('-');
-                    var newFromDate = new Date(
-                        fromSplit[2],
-                        fromSplit[1],
-                        fromSplit[0]
-                    ).getTime();
-                    var newToDate = new Date(
-                        toSplit[2],
-                        toSplit[1],
-                        toSplit[0]
-                    ).getTime();
-                    var difference = newToDate - newFromDate;
+                    var newFromDate = convertDate(from);
+                    var newToDate   = convertDate(to);
+                    var difference  = newToDate - newFromDate;
 
                     if (Math.abs(difference) < (3600 * 24)) {
                         alert('mala roznica');
@@ -79,8 +69,8 @@ $(document).ready(function()
                         $.post('',
                             {
                                 page: 'rooms',
-                                from: $('#from')  .val(),
-                                to:   $('#to')    .val()
+                                from: from,
+                                to:   to
                             },
                             function (data)
                             {
@@ -113,7 +103,9 @@ $(document).ready(function()
                     $.post('',
                         {
                             page:           'payment',
-                            selectedRooms:  selectedRooms
+                            selectedRooms:  selectedRooms,
+                            from:           from,
+                            to:             to
                         },
                         function (data)
                         {
@@ -339,6 +331,18 @@ function useValidator()
             }
         }
     });
+}
+
+function convertDate(date)
+{
+    var splitDate = date.split('-');
+    var newDate = new Date(
+        splitDate[2],
+        splitDate[1],
+        splitDate[0]
+    ).getTime();
+
+    return newDate;
 }
 
 function showSpiner()
