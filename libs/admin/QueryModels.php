@@ -2,7 +2,7 @@
 /**
  * @author chajr <chajr@bluetree.pl>
  * @package core
- * @version 0.4.2
+ * @version 0.4.3
  * @copyright chajr/bluetree
  */
 class Libs_Admin_QueryModels
@@ -77,8 +77,8 @@ class Libs_Admin_QueryModels
     static function getRoomsWithTerms()
     {
         $query = "SELECT
-            pokoje.*, terminy.id_reservation, .terminy.id_pokoje,
-            rezerwacje.opcje, terminy.id as term_id
+            pokoje.*, terminy.id_reservation, terminy.id_pokoje, rezerwacje.od,
+            rezerwacje.do, rezerwacje.opcje, terminy.id as term_id
             FROM
             rezerwacje , terminy, pokoje
             WHERE

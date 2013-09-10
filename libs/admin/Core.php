@@ -2,7 +2,7 @@
 /**
  * @author chajr <chajr@bluetree.pl>
  * @package admin
- * @version 0.9.1
+ * @version 0.9.2
  * @copyright chajr/bluetree
  */
 class Libs_Admin_Core
@@ -396,6 +396,8 @@ class Libs_Admin_Core
             $roomOptions = $this->_getRoomOption(
                 unserialize($room['opcje']), $room['id']
             );
+            $this->_calculateDays($room['od'], $room['do']);
+
             $price          = $this->_calculatePriceForRoom($roomOptions);
             $roomsDisplay[] = array(
                 'term_id'           => $room['term_id'],
@@ -405,7 +407,7 @@ class Libs_Admin_Core
                 'type'              => $this->_getDostawkaType($roomOptions['dostawka']),
                 'spa'               => $this->_changeToString($roomOptions['spa']),
                 'floor'             => $room['floor'],
-                'price'             => $price,
+                'price'             => $price * $this->_daysRange,
                 'room_description'  => $room['description']
             );
         }
