@@ -2,7 +2,7 @@
 /**
  * @author chajr <chajr@bluetree.pl>
  * @package admin
- * @version 0.9.0
+ * @version 0.9.1
  * @copyright chajr/bluetree
  */
 class Libs_Admin_Core
@@ -49,7 +49,7 @@ class Libs_Admin_Core
                     break;
 
                 case 'remove_term':
-                    $this->_removeTermAndReservation();
+                    $this->_removeTerm();
                     $this->_baseRender();
                     break;
 
@@ -142,11 +142,10 @@ class Libs_Admin_Core
     /**
      * remove term and reservations that are related
      */
-    protected function _removeTermAndReservation()
+    protected function _removeTerm()
     {
         $reservationId = $_GET['id'];
         Libs_QueryModels::removeTerm($reservationId);
-        Libs_QueryModels::removeReservation($reservationId);
     }
 
     /**
