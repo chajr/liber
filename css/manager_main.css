@@ -123,3 +123,12 @@ nav{
     top: -55px;
     right: 35px;
 }
+.btn-default{
+    background-color: #2A2C2C;
+}
+.btn-info:hover,
+.btn-info:focus,
+.btn-info:active,
+.btn-info.active {
+    background-color: #36a8ca;
+}
