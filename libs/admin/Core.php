@@ -2,7 +2,7 @@
 /**
  * @author chajr <chajr@bluetree.pl>
  * @package admin
- * @version 0.10.0
+ * @version 0.11.0
  * @copyright chajr/bluetree
  */
 class Libs_Admin_Core
@@ -280,9 +280,19 @@ class Libs_Admin_Core
         $fullReservations   = array();
 
         foreach ($reservations as $reservation) {
+            $idList = Libs_Admin_QueryModels::getTerms($reservation['id']);
+            $data   = $idList->result(TRUE);
+            $idS    = '';
+
+            if ($data) {
+                foreach ($data as $term) {
+                    $idS .= $term['id'] . ', ';
+                }
+            }
+
             $fullReservations[] = array(
                 'id'                => $reservation['id'],
-                'term_list'         => '',
+                'term_list'         => rtrim($idS, ', '),
                 'email'             => $reservation['mail'],
                 'from'              => $reservation['od'],
                 'to'                => $reservation['do'],

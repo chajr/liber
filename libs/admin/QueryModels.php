@@ -2,7 +2,7 @@
 /**
  * @author chajr <chajr@bluetree.pl>
  * @package core
- * @version 0.5.0
+ * @version 0.6.0
  * @copyright chajr/bluetree
  */
 class Libs_Admin_QueryModels
@@ -43,11 +43,16 @@ class Libs_Admin_QueryModels
     /**
      * get all terms from database
      *
+     * @param integer|null $reservationId
      * @return Libs_Mysql
      */
-    static function getTerms ()
+    static function getTerms ($reservationId = NULL)
     {
-        $query = "SELECT * FROM terminy ORDER BY data_przyjazdu DESC";
+        $where = '';
+        if ($reservationId) {
+            $where = " WHERE id_reservation='$reservationId'";
+        }
+        $query = "SELECT * FROM terminy $where ORDER BY data_przyjazdu DESC";
 
         return new Libs_Mysql($query);
     }
