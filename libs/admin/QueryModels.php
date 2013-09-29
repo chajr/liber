@@ -2,7 +2,7 @@
 /**
  * @author chajr <chajr@bluetree.pl>
  * @package core
- * @version 0.4.3
+ * @version 0.5.0
  * @copyright chajr/bluetree
  */
 class Libs_Admin_QueryModels
@@ -85,6 +85,19 @@ class Libs_Admin_QueryModels
             terminy.id_reservation = rezerwacje.id
             AND terminy.id_pokoje = pokoje.id";
 
+        return new Libs_Mysql($query);
+    }
+
+    /**
+     * set payment information (payment done or not)
+     * 
+     * @param integer $reservationId
+     * @param string $value
+     * @return Libs_Mysql
+     */
+    static function setPayment($reservationId, $value)
+    {
+        $query = "UPDATE rezerwacje SET uwagi='$value' WHERE id='$reservationId'";
         return new Libs_Mysql($query);
     }
 }

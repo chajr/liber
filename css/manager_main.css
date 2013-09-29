@@ -123,3 +123,6 @@ nav{
     top: -55px;
     right: 35px;
 }
+.modal-content.payment_done{
+    background-color: #e4ffcf;
+}

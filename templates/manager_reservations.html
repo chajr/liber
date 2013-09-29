@@ -79,6 +79,97 @@
         </tbody>
     </table>
 </div>
+{;start;reservation_details;}
+<div class="modal fade"
+     id="reservation_detail_{;reservation_details;id;}"
+     tabindex="-1"
+     role="dialog"
+     aria-labelledby="Szczegóły rezerwacji"
+     aria-hidden="true"
+>
+    <div class="modal-dialog">
+        <div class="modal-content {;reservation_details;payment_done;}">
+            <div class="modal-header">
+                <button type="button"
+                        class="close"
+                        data-dismiss="modal"
+                        aria-hidden="true"
+                >
+                    &times;
+                </button>
+                <h4 class="modal-title">
+                    Szczegóły rezerwacji: {;reservation_details;id;}
+                    {;reservation_details;payment_ico;}
+                </h4>
+            </div>
+            <div class="modal-body">
+                <address>
+                    <strong>
+                        Imię:
+                    </strong>
+                    {;reservation_details;imie;}
+                    <br/>
+                    <strong>
+                        Nazwisko:
+                    </strong>
+                    {;reservation_details;nazwisko;}
+                    <br/>
+                    <strong>
+                        Ulica:
+                    </strong>
+                    {;reservation_details;ulica;}
+                    <br/>
+                    <strong>
+                        Numer domu/mieszkania:
+                    </strong>
+                    {;reservation_details;numer;}
+                    <br/>
+                    <strong>
+                        Miasto:
+                    </strong>
+                    {;reservation_details;miasto;}
+                    <br/>
+                    <strong>
+                        Kod pocztowy:
+                    </strong>
+                    {;reservation_details;kod;}
+                    <br/>
+                    <strong>
+                        Telefon:
+                    </strong>
+                    {;reservation_details;telefon;}
+                    <br/>
+                    <strong>
+                        Email:
+                    </strong>
+                    <a href="mailto:{;reservation_details;mail;}">
+                        {;reservation_details;mail;}
+                    </a>
+                    <br/>
+                </address>
+                <div class="full_price">
+                    <div>
+                       Łączny koszt za wszystkie pokoje: {;reservation_details;full_price;} zł
+                    </div>
+                    <input type="checkbox"
+                           class="payment"
+                           data-paymentid="{;reservation_details;id;}"
+                           {;reservation_details;payment;}
+                    /> Zapłacono
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button"
+                        class="btn btn-default remove_term_cancel"
+                        data-dismiss="modal"
+                >
+                    Zamknij
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+{;end;reservation_details;}
 <div class="modal fade"
      id="remove_confirm"
      tabindex="-1"

@@ -2,7 +2,7 @@
 /**
  * @author chajr <chajr@bluetree.pl>
  * @package admin
- * @version 0.9.2
+ * @version 0.10.0
  * @copyright chajr/bluetree
  */
 class Libs_Admin_Core
@@ -57,6 +57,10 @@ class Libs_Admin_Core
                     $this->_renderReservations();
                     break;
 
+                case 'set_payment':
+                    $this->_setPayment();
+                    break;
+
                 default:
                     $this->_baseRender();
                     break;
@@ -101,6 +105,7 @@ class Libs_Admin_Core
         $menu->generate('active_reservations', 'active');
         $header->generate('nav_bar', $menu->render());
         $reservations->loop('reservations', $this->_getReservationList());
+        $reservations->loop('reservation_details', $this->_getReservationDetails());
 
         $stream  = '';
         $stream .= $header->render();
@@ -289,6 +294,103 @@ class Libs_Admin_Core
         }
 
         return $fullReservations;
+    }
+
+    /**
+     * return details about reservation to show on dialog box
+     * 
+     * @return array
+     */
+    protected function _getReservationDetails()
+    {
+        $reservations       = Libs_Admin_QueryModels::getReservations()->result(TRUE);
+        $fullReservations   = array();
+
+        foreach ($reservations as $reservation) {
+            $this->_calculateDays($reservation['od'], $reservation['do']);
+            $payment  = $this->_isPaymentDone($reservation['uwagi']);
+            $priceSum = 0;
+
+            if ($reservation['opcje']) {
+                $options = unserialize($reservation['opcje']);
+                foreach ($options as $option) {
+                    if ($option) {
+                        $priceSum += $this->_calculatePriceForRoom($option);
+                    }
+                }
+            }
+
+            $fullReservations[] = array(
+                'id'            => $reservation['id'],
+                'imie'          => $reservation['imie'],
+                'nazwisko'      => $reservation['nazwisko'],
+                'telefon'       => $reservation['telefon'],
+                'ulica'         => $reservation['ulica'],
+                'numer'         => $reservation['numer'],
+                'miasto'        => $reservation['miasto'],
+                'mail'          => $reservation['mail'],
+                'kod'           => $reservation['kod'],
+                'full_price'    => $priceSum * $this->_daysRange,
+                'payment_done'  => $payment['payment_done'],
+                'payment_ico'   => $payment['payment_ico'],
+                'payment'       => $payment['payment'],
+            );
+        }
+
+        return $fullReservations;
+    }
+
+    /**
+     * return information about payment
+     * 
+     * @param integer|null $option
+     * @return array
+     */
+    protected function _isPaymentDone($option)
+    {
+        if ($option) {
+            return array(
+                'payment_done'  => 'payment_done',
+                'payment_ico'   => '<i class="icon-check"></i>',
+                'payment'       => 'checked="checked"',
+            );
+        }
+
+        return array(
+            'payment_done'  => '',
+            'payment_ico'   => '',
+            'payment'       => '',
+        );
+    }
+
+    /**
+     * set payment information by ajax
+     */
+    protected function _setPayment()
+    {
+        if (   isset($_POST['value'])
+            && $_POST['id']
+            && is_numeric($_POST['id'])
+            && ($_POST['value'] === 'set_payment' || $_POST['value'] === 'unset_payment')
+        ) {
+
+            if ($_POST['value'] === 'set_payment') {
+                $payment = Libs_Admin_QueryModels::setPayment($_POST['id'], 'TRUE');
+            } else if ($_POST['value'] === 'unset_payment') {
+                $payment = Libs_Admin_QueryModels::setPayment($_POST['id'], NULL);
+            } else {
+                echo ':(';
+            }
+
+            if ($payment->err) {
+                echo $payment->err;
+            } else {
+                echo 'ok';
+            }
+
+        } else {
+            echo ':(';
+        }
     }
 
     /**

@@ -26,4 +26,31 @@ $(document).ready(function()
     {
         $('.logo_bigger').hide();
     });
+    
+    //save payment
+    $('input.payment').click(function()
+    {
+        var id          = $(this).data('paymentid');
+        var value       = '';
+        var elemenrt    = $(this);
+
+        if (elemenrt.is(':checked')) {
+            value = 'set_payment';
+        } else {
+            value = 'unset_payment';
+        }
+
+        $.post('?page=set_payment', {value: value, id: id}).done(function(data){
+            console.log(data);
+            if (elemenrt.is(':checked') && data === 'ok') {
+                $('#reservation_detail_' + id + ' .modal-content').addClass('payment_done');
+                $('#reservation_detail_' + id + ' .modal-title').append('<i class="icon-check"></i>');
+            } else if(data === 'ok') {
+                $('#reservation_detail_' + id + ' .modal-content').removeClass('payment_done');
+                $('#reservation_detail_' + id + ' .modal-title i').remove();
+            } else {
+                alert('Coś poszło nie tak, spróbuj jeszcze raz');
+            }
+        });
+    });
 });
