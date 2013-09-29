@@ -2,7 +2,7 @@
 /**
  * @author chajr <chajr@bluetree.pl>
  * @package admin
- * @version 0.12.0
+ * @version 0.13.0
  * @copyright chajr/bluetree
  */
 class Libs_Admin_Core
@@ -61,11 +61,33 @@ class Libs_Admin_Core
                     $this->_setPayment();
                     break;
 
+                case 'promotions':
+                    $this->_renderPromotions();
+                    break;
+
                 default:
                     $this->_baseRender();
                     break;
             }
         }
+    }
+
+    protected function _renderPromotions()
+    {
+        $header         = new Libs_Render('manager_top');
+        $footer         = new Libs_Render('manager_bottom');
+        $menu           = new Libs_Render('manager_menu');
+        $promotions     = new Libs_Render('manager_promotions');
+
+        $menu->generate('active_promotions', 'active');
+        $header->generate('nav_bar', $menu->render());
+
+        $stream  = '';
+        $stream .= $header->render();
+        $stream .= $promotions->render();
+        $stream .= $footer->render();
+
+        $this->_display = $stream;
     }
 
     /**
