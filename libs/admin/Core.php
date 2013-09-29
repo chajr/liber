@@ -2,7 +2,7 @@
 /**
  * @author chajr <chajr@bluetree.pl>
  * @package admin
- * @version 0.11.0
+ * @version 0.12.0
  * @copyright chajr/bluetree
  */
 class Libs_Admin_Core
@@ -234,13 +234,22 @@ class Libs_Admin_Core
      */
     protected function _getTermsList()
     {
-        $terms      = Libs_Admin_QueryModels::getTerms();
+        $reservationId = NULL;
+        if (isset($_GET['id']) && is_numeric($_GET['id'])) {
+            $reservationId = $_GET['id'];
+        }
+
+        $terms      = Libs_Admin_QueryModels::getTerms($reservationId);
         $fullTerms  = array();
 
         if ($terms->err) {
             $this->_error = $terms->err;
         } else {
             $termsData = $terms->result(TRUE);
+
+            if (!$termsData || empty($termsData)) {
+                return $fullTerms;
+            }
 
             foreach ($termsData as $index => $term) {
                 $roomData           = $this->_getRoomData($term['id_pokoje']);
@@ -276,7 +285,13 @@ class Libs_Admin_Core
      */
     protected function _getReservationList()
     {
-        $reservations       = Libs_Admin_QueryModels::getReservations()->result(TRUE);
+        $reservationId = NULL;
+        if (isset($_GET['id']) && is_numeric($_GET['id'])) {
+            $reservationId = $_GET['id'];
+        }
+
+        $reservations       = Libs_Admin_QueryModels::getReservations($reservationId)
+            ->result(TRUE);
         $fullReservations   = array();
 
         foreach ($reservations as $reservation) {
@@ -313,7 +328,13 @@ class Libs_Admin_Core
      */
     protected function _getReservationDetails()
     {
-        $reservations       = Libs_Admin_QueryModels::getReservations()->result(TRUE);
+        $reservationId = NULL;
+        if (isset($_GET['id']) && is_numeric($_GET['id'])) {
+            $reservationId = $_GET['id'];
+        }
+
+        $reservations       = Libs_Admin_QueryModels::getReservations($reservationId)
+            ->result(TRUE);
         $fullReservations   = array();
 
         foreach ($reservations as $reservation) {
@@ -500,9 +521,18 @@ class Libs_Admin_Core
      */
     protected function _getRoomsDetails()
     {
-        $rooms          = Libs_Admin_QueryModels::getRoomsWithTerms();
+        $reservationId = NULL;
+        if (isset($_GET['id']) && is_numeric($_GET['id'])) {
+            $reservationId = $_GET['id'];
+        }
+
+        $rooms          = Libs_Admin_QueryModels::getRoomsWithTerms($reservationId);
         $roomsData      = $rooms->result(TRUE);
         $roomsDisplay   = array();
+
+        if (!$roomsData || empty($roomsData)) {
+            return $roomsDisplay;
+        }
 
         foreach ($roomsData as $room) {
             $roomOptions = $this->_getRoomOption(
