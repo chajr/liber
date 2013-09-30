@@ -53,4 +53,18 @@ $(document).ready(function()
             }
         });
     });
+
+    //add new promotion
+    $('.add_promotion').click(function()
+    {
+        
+    });
+
+    //remove promotion
+    $('.remove_promotion').click(function()
+    {
+        
+    });
+
+    //automatic save promotion
 });

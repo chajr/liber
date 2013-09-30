@@ -2,7 +2,7 @@
 /**
  * @author chajr <chajr@bluetree.pl>
  * @package core
- * @version 0.7.0
+ * @version 0.8.0
  * @copyright chajr/bluetree
  */
 class Libs_Admin_QueryModels
@@ -111,5 +111,26 @@ class Libs_Admin_QueryModels
     {
         $query = "UPDATE rezerwacje SET uwagi='$value' WHERE id='$reservationId'";
         return new Libs_Mysql($query);
+    }
+
+    /**
+     * return all promotions
+     *
+     * @return Libs_Mysql
+     */
+    static function getPromotions()
+    {
+        $query = "SELECT * FROM promotions";
+        return new Libs_Mysql($query);
+    }
+
+    static function updatePromotion($promotionId)
+    {
+        
+    }
+
+    static function removePromotion($promotionId)
+    {
+        
     }
 }

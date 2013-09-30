@@ -2,7 +2,7 @@
 /**
  * @author chajr <chajr@bluetree.pl>
  * @package admin
- * @version 0.13.0
+ * @version 0.14.0
  * @copyright chajr/bluetree
  */
 class Libs_Admin_Core
@@ -25,6 +25,34 @@ class Libs_Admin_Core
      * @var string
      */
     protected $_error = '';
+
+    /**
+     * list of base promotion days select, to render whole list
+     * 
+     * @var array
+     */
+    protected $_promotionDaysList = array(
+        'selected_1'     => '',
+        'selected_2'     => '',
+        'selected_3'     => '',
+        'selected_4'     => '',
+        'selected_5'     => '',
+        'selected_6'     => '',
+        'selected_7'     => '',
+        'selected_8'     => '',
+        'selected_9'     => '',
+        'selected_10'    => '',
+        'selected_11'    => '',
+        'selected_12'    => '',
+        'selected_13'    => '',
+        'selected_14'    => '',
+        'selected_15'    => '',
+        'selected_16'    => '',
+        'selected_17'    => '',
+        'selected_18'    => '',
+        'selected_19'    => '',
+        'selected_20'    => '',
+    );
 
     /**
      * starts Libs_Core
@@ -72,6 +100,9 @@ class Libs_Admin_Core
         }
     }
 
+    /**
+     * render page with promotion list
+     */
     protected function _renderPromotions()
     {
         $header         = new Libs_Render('manager_top');
@@ -81,6 +112,7 @@ class Libs_Admin_Core
 
         $menu->generate('active_promotions', 'active');
         $header->generate('nav_bar', $menu->render());
+        $promotions->loop('promotion_list', $this->_getPromotions());
 
         $stream  = '';
         $stream .= $header->render();
@@ -88,6 +120,34 @@ class Libs_Admin_Core
         $stream .= $footer->render();
 
         $this->_display = $stream;
+    }
+
+    /**
+     * return list of all promotions to display
+     * 
+     * @return array
+     */
+    protected function _getPromotions()
+    {
+        $promotionsList = array();
+        $promotions     = Libs_Admin_QueryModels::getPromotions()->result(TRUE);
+
+        foreach ($promotions as $promotion) {
+            $dayNumber = 'selected_' . $promotion['days'];
+
+            $promotionBase = array(
+                'promotion_id'  => $promotion['promotion_id'],
+                'percent'       => $promotion['percent'],
+                $dayNumber      => ' selected="selected" ',
+            );
+
+            $promotionsList[] = array_merge(
+                $this->_promotionDaysList,
+                $promotionBase
+            );
+        }
+
+        return $promotionsList;
     }
 
     /**
@@ -433,6 +493,7 @@ class Libs_Admin_Core
                 $payment = Libs_Admin_QueryModels::setPayment($_POST['id'], NULL);
             } else {
                 echo ':(';
+                exit;
             }
 
             if ($payment->err) {
@@ -650,10 +711,5 @@ class Libs_Admin_Core
             $roomPrice += $roomPriceModel['dostawka'][$roomOptions['dostawka']];
         }
         return $roomPrice;
-    }
-
-    protected function _getReservation($id)
-    {
-        
     }
 }

@@ -135,3 +135,44 @@ nav{
 .modal-content.payment_done{
     background-color: #e4ffcf;
 }
+.add_promotion{
+    margin: 0px auto;
+    display: block;
+}
+#promotion_list{
+    width:630px;
+    margin: 20px auto;
+}
+.promotion_box{
+    border: 1px solid #A5A7A7;
+    border-radius: 3px 3px 3px 3px;
+    padding:10px;
+    background-color: #4A4F52;
+    margin: 5px auto;
+}
+.promotion_box .form-control{
+    width: 180px;
+    float: left;
+    background-color: #595B5B;
+    border: 1px solid rgba(0, 0, 0, 0.36);
+    color: #C6C8C8;
+}
+.promotion_box .remove_promotion{
+    float: right;
+}
+.promotion_box .input-group{
+    width: 180px;
+    margin-left: 25px;
+    float: left;
+}
+.clear{
+    clear: both;
+}
+.promotion_box .days{
+    float: left;
+    line-height: 38px;
+    margin-right: 10px;
+}
+#default_promotion_block{
+    display: none;
+}

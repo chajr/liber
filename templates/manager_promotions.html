@@ -1,3 +1,137 @@
-<form>
-    
-</form>
+<div class="row">
+    <h3>
+        Promocje
+    </h3>
+    <button type="button" class="btn btn-info add_promotion">
+        Dodaj promocję
+    </button>
+
+    <div id="promotion_list">
+        {;start;promotion_list;}
+        <div class="promotion_box" id="promotion_box_{;promotion_list;promotion_id;}">
+            <span class="days">Dni:</span>
+            <select class="form-control">
+                <option {;promotion_list;selected_1;} value="1">1</option>
+                <option {;promotion_list;selected_2;} value="2">2</option>
+                <option {;promotion_list;selected_3;} value="3">3</option>
+                <option {;promotion_list;selected_4;} value="4">4</option>
+                <option {;promotion_list;selected_5;} value="5">5</option>
+                <option {;promotion_list;selected_6;} value="6">6</option>
+                <option {;promotion_list;selected_7;} value="7">7</option>
+                <option {;promotion_list;selected_8;} value="8">8</option>
+                <option {;promotion_list;selected_9;} value="9">9</option>
+                <option {;promotion_list;selected_10;} value="10">10</option>
+                <option {;promotion_list;selected_11;} value="11">11</option>
+                <option {;promotion_list;selected_12;} value="12">12</option>
+                <option {;promotion_list;selected_13;} value="13">13</option>
+                <option {;promotion_list;selected_14;} value="14">14</option>
+                <option {;promotion_list;selected_15;} value="15">15</option>
+                <option {;promotion_list;selected_16;} value="16">16</option>
+                <option {;promotion_list;selected_17;} value="17">17</option>
+                <option {;promotion_list;selected_18;} value="18">18</option>
+                <option {;promotion_list;selected_19;} value="19">19</option>
+                <option {;promotion_list;selected_20;} value="20">20</option>
+            </select>
+            <div class="input-group">
+                <input  type        = "text"
+                        name        = "percent"
+                        placeholder = "procent"
+                        class       = "form-control"
+                        value       = "{;promotion_list;percent;}"
+                />
+                <span class="input-group-addon">
+                    %
+                </span>
+            </div>
+            <button type="button" class="btn btn-danger remove_promotion">
+                Usuń
+            </button>
+            <div class="clear"></div>
+        </div>
+        {;end;promotion_list;}
+        <div class="clear"></div>
+    </div>
+
+    <button type="button" class="btn btn-info add_promotion">
+        Dodaj promocję
+    </button>
+    <div id="default_promotion_block">
+        <div class="promotion_box">
+            <span class="days">Dni:</span>
+            <select class="form-control">
+                <option value="1">1</option>
+                <option value="2">2</option>
+                <option value="3">3</option>
+                <option value="4">4</option>
+                <option value="5">5</option>
+                <option value="6">6</option>
+                <option value="7">7</option>
+                <option value="8">8</option>
+                <option value="9">9</option>
+                <option value="10">10</option>
+                <option value="11">11</option>
+                <option value="12">12</option>
+                <option value="13">13</option>
+                <option value="14">14</option>
+                <option value="15">15</option>
+                <option value="16">16</option>
+                <option value="17">17</option>
+                <option value="18">18</option>
+                <option value="19">19</option>
+                <option value="20">20</option>
+            </select>
+            <div class="input-group">
+                <input  type        = "text"
+                        name        = "percent"
+                        placeholder = "procent"
+                        class       = "form-control"
+                />
+                <span class="input-group-addon">
+                    %
+                </span>
+            </div>
+            <button type="button" class="btn btn-danger remove_promotion">
+                Usuń
+            </button>
+            <div class="clear"></div>
+        </div>
+    </div>
+</div>
+<div class="modal fade"
+     id="remove_confirm"
+     tabindex="-1"
+     role="dialog"
+     aria-labelledby="Potwierdzenie usunięcia"
+     aria-hidden="true"
+        >
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button"
+                        class="close"
+                        data-dismiss="modal"
+                        aria-hidden="true"
+                        >
+                    &times;
+                </button>
+                <h4 class="modal-title">Potwierdzenie usunięcia</h4>
+            </div>
+            <div class="modal-body">
+                Czy na pewno usunąć wybraną promocję?
+            </div>
+            <div class="modal-footer">
+                <button type="button"
+                        class="btn btn-default remove_reservation_cancel"
+                        data-dismiss="modal"
+                        >
+                    Anuluj
+                </button>
+                <button type="button"
+                        class="btn btn-danger remove_reservation_modal"
+                        >
+                    Usuń
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
