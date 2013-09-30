@@ -129,3 +129,16 @@ CREATE TABLE IF NOT EXISTS `terminy` (
   `data_wyjazdu` date NOT NULL,
   PRIMARY KEY  (`id`)
 ) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=32 ;
+
+-- --------------------------------------------------------
+
+--
+-- Struktura tabeli dla  `promotions`
+--
+
+CREATE TABLE `promotions` (
+  `promotion_id` int(11) NOT NULL auto_increment,
+  `days` int(3) NOT NULL,
+  `percent` decimal(3,0) NOT NULL,
+  PRIMARY KEY  (`promotion_id`)
+) ENGINE=MyISAM DEFAULT CHARSET=latin2 AUTO_INCREMENT=1 ;
