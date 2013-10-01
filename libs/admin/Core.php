@@ -2,7 +2,7 @@
 /**
  * @author chajr <chajr@bluetree.pl>
  * @package admin
- * @version 0.14.0
+ * @version 0.15.0
  * @copyright chajr/bluetree
  */
 class Libs_Admin_Core
@@ -25,6 +25,18 @@ class Libs_Admin_Core
      * @var string
      */
     protected $_error = '';
+
+    /**
+     * contains list of errors when saving promotion
+     * @var array
+     */
+    protected $_promotionErrors = array();
+
+    /**
+     * inform to show error or ok message
+     * @var bool
+     */
+    protected $_toUpdate = FALSE;
 
     /**
      * list of base promotion days select, to render whole list
@@ -81,6 +93,17 @@ class Libs_Admin_Core
                     $this->_baseRender();
                     break;
 
+                case 'remove_promotion':
+                    $this->_toUpdate = TRUE;
+                    $this->_renderPromotions();
+                    break;
+
+                case 'save_promotions':
+                    $this->_toUpdate = TRUE;
+                    $this->_setPromotions();
+                    $this->_renderPromotions();
+                    break;
+
                 case 'reservations':
                     $this->_renderReservations();
                     break;
@@ -101,6 +124,132 @@ class Libs_Admin_Core
     }
 
     /**
+     * set new or update promotions
+     */
+    protected function _setPromotions()
+    {
+        $this->_processNewPromotions();
+        $this->_processOldPromotions();
+    }
+
+    /**
+     * update existing promotions
+     */
+    protected function _processOldPromotions()
+    {
+        $list = array();
+
+        foreach ($_POST as $key => $data) {
+            $valid = preg_match('#((days)|(percent))_[\\d]+#', $key);
+            if ($valid) {
+                $keyType = explode('_', $key);
+                if ($keyType[0] === 'days') {
+                    $list[$keyType[1]]['days'] = $data;
+                }
+                if ($keyType[0] === 'percent') {
+                    $list[$keyType[1]]['percent'] = $data;
+                }
+            }
+        }
+
+        foreach ($list as $id => $promotion) {
+            $validateDate       = $this->_validatePromotion($promotion['days']);
+            $validatePercent    = $this->_validatePromotion($promotion['percent']);
+
+            if ($validateDate && $validatePercent) {
+                $insert = Libs_Admin_QueryModels::updatePromotion(
+                    $id,
+                    $promotion['days'],
+                    $promotion['percent']
+                );
+
+                if ($insert->err) {
+                    $this->_promotionErrors[] = 'Problem ze zmianą promocji: '
+                        . "Dni {$promotion['days']}, {$promotion['percent']}%";
+                }
+            }
+        }
+    }
+
+    /**
+     * create new promotions
+     */
+    protected function _processNewPromotions()
+    {
+        if (isset($_POST['days']) && isset($_POST['percent'])) {
+            $list = $this->_createDataArray($_POST['days'], $_POST['percent']);
+            foreach ($list as $promotion) {
+                $validateDate       = $this->_validatePromotion($promotion['days']);
+                $validatePercent    = $this->_validatePromotion($promotion['percent']);
+
+                if ($validateDate && $validatePercent) {
+                    $insert = Libs_Admin_QueryModels::createPromotion(
+                        $promotion['days'],
+                        $promotion['percent']
+                    );
+
+                    if ($insert->err) {
+                        $this->_promotionErrors[] = 'Problem z dodaniem promocji do bazy: '
+                            . "Dni {$promotion['days']}, {$promotion['percent']}%";
+                    }
+                }
+            }
+        }
+    }
+
+    /**
+     * create array with promotion data to create promotion
+     * 
+     * @param array $days
+     * @param array $percents
+     * @return array
+     */
+    protected function _createDataArray(array $days, array $percents)
+    {
+        $finalArray = array();
+        foreach ($days as $key => $val) {
+            $finalArray[$key] = array(
+                'days'      => $val,
+                'percent'   => $percents[$key]
+            );
+        }
+
+        return $finalArray;
+    }
+
+    /**
+     * check thar parameters are correct
+     * 
+     * @param mixed $data
+     * @return bool
+     */
+    protected function _validatePromotion($data)
+    {
+        $bool = Libs_Valid::valid($data, 'integer');
+        if (!$bool) {
+            $this->_promotionErrors[] = 'Nieprawidłowa wartość parametru: ' . $data;
+            return FALSE;
+        }
+
+        return TRUE;
+    }
+
+    /**
+     * create full error message
+     * 
+     * @return string
+     */
+    protected function _checkPromotionErrors()
+    {
+        $message = '';
+        foreach ($this->_promotionErrors as $error) {
+            $message .= $error .'<br/>';
+        }
+
+        return $message;
+    }
+
+    /**
      * render page with promotion list
      */
     protected function _renderPromotions()
@@ -113,6 +262,14 @@ class Libs_Admin_Core
         $menu->generate('active_promotions', 'active');
         $header->generate('nav_bar', $menu->render());
         $promotions->loop('promotion_list', $this->_getPromotions());
+
+        if ($this->_toUpdate) {
+            if (empty($this->_promotionErrors)) {
+                $header->generate('ok', 'Promocje zapisane');
+            } else {
+                $header->generate('error', $this->_checkPromotionErrors());
+            }
+        }
 
         $stream  = '';
         $stream .= $header->render();

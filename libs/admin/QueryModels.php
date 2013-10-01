@@ -2,7 +2,7 @@
 /**
  * @author chajr <chajr@bluetree.pl>
  * @package core
- * @version 0.8.0
+ * @version 0.9.0
  * @copyright chajr/bluetree
  */
 class Libs_Admin_QueryModels
@@ -124,13 +124,46 @@ class Libs_Admin_QueryModels
         return new Libs_Mysql($query);
     }
 
-    static function updatePromotion($promotionId)
+    /**
+     * update promotion
+     * 
+     * @param integer $promotionId
+     * @param integer $days
+     * @param integer $percent
+     * @return Libs_Mysql
+     */
+    static function updatePromotion($promotionId, $days, $percent)
     {
-        
+        $query = "UPDATE promotions
+            SET
+            days='$days',
+            percent='$percent'
+            WHERE
+            promotion_id='$promotionId'";
+        return new Libs_Mysql($query);
     }
 
     static function removePromotion($promotionId)
     {
         
+    }
+
+    /**
+     * create new promotion
+     * 
+     * @param integer $days
+     * @param integer $percent
+     * @return Libs_Mysql
+     */
+    static function createPromotion($days, $percent)
+    {
+        $query = "INSERT INTO
+            promotions
+            (days, percent)
+            VALUES
+            ('$days', '$percent')
+        ";
+
+        return new Libs_Mysql($query);
     }
 }
