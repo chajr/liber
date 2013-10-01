@@ -2,7 +2,7 @@
 /**
  * @author chajr <chajr@bluetree.pl>
  * @package admin
- * @version 0.15.0
+ * @version 0.16.0
  * @copyright chajr/bluetree
  */
 class Libs_Admin_Core
@@ -95,6 +95,7 @@ class Libs_Admin_Core
 
                 case 'remove_promotion':
                     $this->_toUpdate = TRUE;
+                    $this->_removePromotion();
                     $this->_renderPromotions();
                     break;
 
@@ -119,6 +120,20 @@ class Libs_Admin_Core
                 default:
                     $this->_baseRender();
                     break;
+            }
+        }
+    }
+
+    /**
+     * remove promotion with given id
+     */
+    protected function _removePromotion()
+    {
+        if (isset($_GET['id']) && is_numeric($_GET['id'])) {
+            $removed =Libs_Admin_QueryModels::removePromotion($_GET['id']);
+
+            if ($removed->err) {
+                $this->_promotionErrors[] = 'Problem z usunięciem promocji';
             }
         }
     }

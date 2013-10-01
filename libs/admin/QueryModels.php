@@ -2,7 +2,7 @@
 /**
  * @author chajr <chajr@bluetree.pl>
  * @package core
- * @version 0.9.0
+ * @version 0.10.0
  * @copyright chajr/bluetree
  */
 class Libs_Admin_QueryModels
@@ -143,9 +143,21 @@ class Libs_Admin_QueryModels
         return new Libs_Mysql($query);
     }
 
+    /**
+     * remove promotion from database
+     * 
+     * @param integer $promotionId
+     * @return Libs_Mysql
+     */
     static function removePromotion($promotionId)
     {
-        
+        $query = "DELETE FROM
+            promotions
+            WHERE
+            promotion_id='$promotionId'
+        ";
+
+        return new Libs_Mysql($query);
     }
 
     /**
