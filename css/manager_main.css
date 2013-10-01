@@ -135,9 +135,13 @@ nav{
 .modal-content.payment_done{
     background-color: #e4ffcf;
 }
-.add_promotion{
-    margin: 0px auto;
-    display: block;
+.add_promotion, .save_promotions{
+    display: inline-block;
+    margin: 0 10px;
+}
+.promotion_buttons_block{
+    margin: 0 auto;
+    width: 280px;
 }
 #promotion_list{
     width:630px;

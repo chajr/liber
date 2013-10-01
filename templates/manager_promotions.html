@@ -2,15 +2,24 @@
     <h3>
         Promocje
     </h3>
-    <button type="button" class="btn btn-info add_promotion">
-        Dodaj promocję
-    </button>
+    <div class="promotion_buttons_block">
+        <button type="button" class="btn btn-info add_promotion">
+            <i class="icon-plus-sign"></i>
+            Dodaj promocję
+        </button>
+        <button type="button" class="btn btn-success save_promotions">
+            <i class="icon-ok"></i>
+            Zapisz
+        </button>
+    </div>
 
-    <div id="promotion_list">
+    <form id="promotion_list" action="?page=save_promotions" method="POST">
         {;start;promotion_list;}
         <div class="promotion_box" id="promotion_box_{;promotion_list;promotion_id;}">
             <span class="days">Dni:</span>
-            <select class="form-control">
+            <select class="form-control"
+                    name="days_{;promotion_list;promotion_id;}"
+            >
                 <option {;promotion_list;selected_1;} value="1">1</option>
                 <option {;promotion_list;selected_2;} value="2">2</option>
                 <option {;promotion_list;selected_3;} value="3">3</option>
@@ -34,7 +43,7 @@
             </select>
             <div class="input-group">
                 <input  type        = "text"
-                        name        = "percent"
+                        name        = "percent_{;promotion_list;promotion_id;}"
                         placeholder = "procent"
                         class       = "form-control"
                         value       = "{;promotion_list;percent;}"
@@ -43,22 +52,38 @@
                     %
                 </span>
             </div>
-            <button type="button" class="btn btn-danger remove_promotion">
+            <button type="button" 
+                    class="btn btn-danger remove_promotion"
+                    data-toggle="modal"
+                    href="#remove_confirm"
+                    data-id="{;promotion_list;promotion_id;}"
+            >
+                <i class="icon-remove"></i>
                 Usuń
             </button>
             <div class="clear"></div>
         </div>
         {;end;promotion_list;}
         <div class="clear"></div>
+    </form>
+
+    <div class="promotion_buttons_block">
+        <button type="button" class="btn btn-info add_promotion">
+            <i class="icon-plus-sign"></i>
+            Dodaj promocję
+        </button>
+        <button type="button" class="btn btn-success save_promotions">
+            <i class="icon-ok"></i>
+            Zapisz
+        </button>
     </div>
 
-    <button type="button" class="btn btn-info add_promotion">
-        Dodaj promocję
-    </button>
     <div id="default_promotion_block">
         <div class="promotion_box">
             <span class="days">Dni:</span>
-            <select class="form-control">
+            <select class="form-control"
+                    name="days[]"
+            >
                 <option value="1">1</option>
                 <option value="2">2</option>
                 <option value="3">3</option>
@@ -82,7 +107,7 @@
             </select>
             <div class="input-group">
                 <input  type        = "text"
-                        name        = "percent"
+                        name        = "percent[]"
                         placeholder = "procent"
                         class       = "form-control"
                 />
@@ -91,6 +116,7 @@
                 </span>
             </div>
             <button type="button" class="btn btn-danger remove_promotion">
+                <i class="icon-remove"></i>
                 Usuń
             </button>
             <div class="clear"></div>
@@ -111,7 +137,7 @@
                         class="close"
                         data-dismiss="modal"
                         aria-hidden="true"
-                        >
+                >
                     &times;
                 </button>
                 <h4 class="modal-title">Potwierdzenie usunięcia</h4>
@@ -123,12 +149,12 @@
                 <button type="button"
                         class="btn btn-default remove_reservation_cancel"
                         data-dismiss="modal"
-                        >
+                >
                     Anuluj
                 </button>
                 <button type="button"
-                        class="btn btn-danger remove_reservation_modal"
-                        >
+                        class="btn btn-danger remove_promotion_modal"
+                >
                     Usuń
                 </button>
             </div>

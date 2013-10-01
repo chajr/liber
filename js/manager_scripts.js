@@ -1,6 +1,8 @@
 $(document).ready(function()
 {
     var termToRemove;
+    var promotionToRemove;
+
     $('.remove_term').click(function()
     {
         termToRemove = $(this).data('id');
@@ -57,14 +59,32 @@ $(document).ready(function()
     //add new promotion
     $('.add_promotion').click(function()
     {
-        
+        var newBlock = $('#default_promotion_block .promotion_box').clone();
+        $('#promotion_list').append(newBlock);
     });
 
     //remove promotion
-    $('.remove_promotion').click(function()
+    $('body').on('click', '.remove_promotion', function()
     {
-        
+        var promotionId = $(this).parent().attr('id');
+        if (promotionId === undefined) {
+            $(this).parent().remove();
+        } else {
+            promotionToRemove = $(this).data('id');
+        }
+    });
+    $('.remove_promotion_modal').click(function()
+    {
+        window.location.href = '?page=remove_promotion&id=' + promotionToRemove;
+    });
+    $('.remove_term_cancel').click(function()
+    {
+        promotionToRemove = null;
     });
 
-    //automatic save promotion
+    //saving promotions
+    $('.save_promotions').click(function()
+    {
+        $('#promotion_list').submit();
+    });
 });
