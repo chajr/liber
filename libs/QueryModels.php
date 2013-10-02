@@ -2,7 +2,7 @@
 /**
  * @author chajr <chajr@bluetree.pl>
  * @package core
- * @version 1.0.0
+ * @version 1.1.0
  * @copyright chajr/bluetree
  */
 class Libs_QueryModels
@@ -107,12 +107,29 @@ class Libs_QueryModels
     }
 
     /**
+     * remove term
+     * 
+     * @param integer $termId
+     * @return Libs_Mysql
+     */
+    static function removeTerm($termId)
+    {
+        $query = "DELETE FROM
+            terminy
+            WHERE
+            id = '$termId'
+        ";
+
+        return new Libs_Mysql($query);
+    }
+
+    /**
      * remove terms on given reservation id
      * 
      * @param integer $reservationId
      * @return Libs_Mysql
      */
-    static function removeTerm($reservationId)
+    static function removeTerms($reservationId)
     {
         $query = "DELETE FROM
             terminy

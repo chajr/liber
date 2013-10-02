@@ -2,7 +2,7 @@
 /**
  * @author chajr <chajr@bluetree.pl>
  * @package core
- * @version 0.10.0
+ * @version 0.11.0
  * @copyright chajr/bluetree
  */
 class Libs_Admin_QueryModels
@@ -174,6 +174,21 @@ class Libs_Admin_QueryModels
             (days, percent)
             VALUES
             ('$days', '$percent')
+        ";
+
+        return new Libs_Mysql($query);
+    }
+
+    /**
+     * @param integer $reservationId
+     * @return Libs_Mysql
+     */
+    static function removeReservation($reservationId)
+    {
+        $query = "DELETE FROM
+            rezerwacje
+            WHERE
+            id='$reservationId'
         ";
 
         return new Libs_Mysql($query);

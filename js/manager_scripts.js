@@ -1,6 +1,7 @@
 $(document).ready(function()
 {
     var termToRemove;
+    var reservationToRemove;
     var promotionToRemove;
 
     $('.remove_term').click(function()
@@ -9,7 +10,7 @@ $(document).ready(function()
     });
     $('.remove_term_modal').click(function()
     {
-        window.location.href = '?page=remove_term&id=' + termToRemove;
+        window.location.href = '?page=remove_term&id_remove=' + termToRemove;
     });
     $('.remove_term_cancel').click(function()
     {
@@ -86,5 +87,18 @@ $(document).ready(function()
     $('.save_promotions').click(function()
     {
         $('#promotion_list').submit();
+    });
+
+    $('.remove_reservation').click(function()
+    {
+        reservationToRemove = $(this).data('id');
+    });
+    $('.remove_reservation_modal').click(function()
+    {
+        window.location.href = '?page=remove_reservation&id_remove=' + reservationToRemove;
+    });
+    $('.remove_term_cancel').click(function()
+    {
+        reservationToRemove = null;
     });
 });

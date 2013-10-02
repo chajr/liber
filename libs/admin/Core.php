@@ -2,7 +2,7 @@
 /**
  * @author chajr <chajr@bluetree.pl>
  * @package admin
- * @version 0.16.0
+ * @version 0.17.0
  * @copyright chajr/bluetree
  */
 class Libs_Admin_Core
@@ -109,6 +109,12 @@ class Libs_Admin_Core
                     $this->_renderReservations();
                     break;
 
+                case 'remove_reservation':
+                    $this->_removeTerms();
+                    $this->_removeReservation();
+                    $this->_renderReservations();
+                    break;
+
                 case 'set_payment':
                     $this->_setPayment();
                     break;
@@ -122,6 +128,15 @@ class Libs_Admin_Core
                     break;
             }
         }
+    }
+
+    /**
+     * remove reservation
+     */
+    protected function _removeReservation()
+    {
+        $reservationId = $_GET['id_remove'];
+        Libs_Admin_QueryModels::removeReservation($reservationId);
     }
 
     /**
@@ -399,12 +414,21 @@ class Libs_Admin_Core
     }
 
     /**
-     * remove term and reservations that are related
+     * remove terms with given reservation id
+     */
+    protected function _removeTerms()
+    {
+        $reservationId = $_GET['id_remove'];
+        Libs_QueryModels::removeTerms($reservationId);
+    }
+
+    /**
+     * remove term
      */
     protected function _removeTerm()
     {
-        $reservationId = $_GET['id'];
-        Libs_QueryModels::removeTerm($reservationId);
+        $termId = $_GET['id_remove'];
+        Libs_QueryModels::removeTerm($termId);
     }
 
     /**

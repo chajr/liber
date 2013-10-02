@@ -2,7 +2,7 @@
 /**
  * @author chajr <chajr@bluetree.pl>
  * @package core
- * @version 1.1.0
+ * @version 1.1.1
  * @copyright chajr/bluetree
  */
 class Libs_Core
@@ -436,7 +436,7 @@ class Libs_Core
 
         if ($errorFlag) {
             Libs_QueryModels::removeReservation($reservationId);
-            Libs_QueryModels::removeTerm($reservationId);
+            Libs_QueryModels::removeTerms($reservationId);
 
             throw new Exception('Błąd podczas zapisu do bazy danych');
         }
