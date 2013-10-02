@@ -180,3 +180,6 @@ nav{
 #default_promotion_block{
     display: none;
 }
+.promotion_buttons_block.margin{
+    margin-bottom: 50px;
+}
