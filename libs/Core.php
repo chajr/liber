@@ -2,7 +2,7 @@
 /**
  * @author chajr <chajr@bluetree.pl>
  * @package core
- * @version 1.1.1
+ * @version 1.2.0
  * @copyright chajr/bluetree
  */
 class Libs_Core
@@ -306,7 +306,12 @@ class Libs_Core
         $counter        = 0;
         $tableClass     = 0;
 
-        foreach ($_POST['rooms'] as $room) {
+        foreach ($_POST['rooms'] as $key => $room) {
+
+            if ($key === 'promotion') {
+                continue;
+            }
+
             $roomPrice      = 0;
             $roomQuery      = Libs_QueryModels::getRooms($room['roomId']);
             $roomDetails    = $roomQuery->result();
@@ -353,8 +358,18 @@ class Libs_Core
             );
         }
 
+        $finalPrice = $this->_finalPrice * $this->_daysRange;
+        $promotion  = $this->_getPromotion();
+        $userEmail->generate('full_base_price', $finalPrice);
+
+        if ($promotion) {
+            $userEmail->generate('promotion', $promotion);
+            $percent    = $this->_percent($promotion, $finalPrice);
+            $finalPrice -= $percent;
+        }
+
         $userEmail->loop('rooms', $this->_roomsDetails);
-        $userEmail->generate('price_sum', $this->_finalPrice * $this->_daysRange);
+        $userEmail->generate('price_sum', $finalPrice);
 
         return $userEmail->render();
     }
@@ -370,7 +385,18 @@ class Libs_Core
 
         $adminEmail->generate('term', $_POST['from'] . ' - ' . $_POST['to']);
         $adminEmail->loop('rooms', $this->_roomsDetails);
-        $adminEmail->generate('price_sum', $this->_finalPrice * $this->_daysRange);
+
+        $finalPrice = $this->_finalPrice * $this->_daysRange;
+        $promotion  = $this->_getPromotion();
+        $adminEmail->generate('full_base_price', $finalPrice);
+
+        if ($promotion) {
+            $adminEmail->generate('promotion', $promotion);
+            $percent    = $this->_percent($promotion, $finalPrice);
+            $finalPrice -= $percent;
+        }
+
+        $adminEmail->generate('price_sum', $finalPrice);
 
         foreach ($_POST['data'] as $information) {
             $adminEmail->generate($information['name'], $information['value']);
@@ -388,6 +414,10 @@ class Libs_Core
     protected function _saveReservation()
     {
         if (isset($_POST['rooms']) && !empty($_POST['rooms'])) {
+            $promotion = $this->_getPromotion();
+            if ($promotion) {
+                $_POST['rooms']['promotion'] = $promotion;
+            }
             $rooms = serialize($_POST['rooms']);
         } else {
             throw new Exception ('Brak danych dla pokoi');
@@ -450,10 +480,18 @@ class Libs_Core
         $successTemplate = new Libs_Render('success');
 
         $successTemplate->loop('rooms', $this->_roomsDetails);
-        $successTemplate->generate(
-            'final_price',
-            $this->_finalPrice * $this->_daysRange
-        );
+
+        $fullPrice = $this->_priceSum * $this->_daysRange;
+        $successTemplate->generate('full_base_price', $fullPrice);
+
+        $promotion = $this->_getPromotion();
+        if ($promotion) {
+            $successTemplate->generate('promotion', $promotion);
+            $percent    = $this->_percent($promotion, $fullPrice);
+            $fullPrice -= $percent;
+        }
+
+        $successTemplate->generate('final_price', $fullPrice);
         $successTemplate->generate('term', $_POST['from'] . ' - ' . $_POST['to']);
 
         $this->_display = $successTemplate->render();
@@ -492,11 +530,32 @@ class Libs_Core
 
         $fullPriceLayout = new Libs_Render('payment');
         $fullPriceLayout->generate('rooms', $priceStream);
-        $fullPriceLayout->generate(
-            'full_price',
-            $this->_priceSum * $this->_daysRange
-        );
+
+        $fullPrice = $this->_priceSum * $this->_daysRange;
+        $fullPriceLayout->generate('full_base_price', $fullPrice);
+
+        $promotion = $this->_getPromotion();
+        if ($promotion) {
+            $fullPriceLayout->generate('promotion', $promotion);
+            $percent    = $this->_percent($promotion, $fullPrice);
+            $fullPrice -= $percent;
+        }
+
+        $fullPriceLayout->generate('full_price', $fullPrice);
+
         $this->_display = $fullPriceLayout->render();
+    }
+
+    /**
+     * calculate percent form value
+     *
+     * @param float $part value that will be percent of other value
+     * @param float $all value from calculate percent
+     * @return integer
+     */
+    protected function _percent($part, $all)
+    {
+        return ($part / 100) *$all;
     }
 
     /**
@@ -528,6 +587,21 @@ class Libs_Core
         }
 
         return $roomPriceLayout->render();
+    }
+
+    /**
+     * get promotion value for days range
+     * 
+     * @return null|integer
+     */
+    protected function _getPromotion()
+    {
+        $result = Libs_QueryModels::getPromotion($this->_daysRange)->result();
+        if (!$result->err || count($result) > 0) {
+            return $result['percent'];
+        }
+
+        return NULL;
     }
 
     /**

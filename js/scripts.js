@@ -1,7 +1,7 @@
 /**
  * @author chajr <chajr@bluetree.pl>
  * @package core
- * @version 1.1.0
+ * @version 1.2.0
  * @copyright chajr/bluetree
  */
 var validatorErrorList = new Array();
@@ -272,7 +272,8 @@ $(document).ready(function()
 
     $('body').on('click', '.spa_price', function()
     {
-        fullPrice   = $('#price_summary i').html();
+        fullPrice   = $('#price_summary').data('price');
+        promotion   = $('#price_summary').data('promotion');
         price       = $(this).parent().find('span i').html();
         isChecked   = $(this).is(':checked');
         basePrice   = $(this).parent().parent().find('.price i').html();
@@ -284,13 +285,16 @@ $(document).ready(function()
             finalPrice = fullPrice - price;
         }
 
-        $('#price_summary i').html(finalPrice);
+        $('#price_summary i strike').html(finalPrice);
+        $('#price_summary i span').html(calculatePromotion(finalPrice, promotion));
+        $('#price_summary').data('price', finalPrice);
     });
 
     $('body').on('click', '.dostawka_price', function()
     {
-        fullPrice       = $('#price_summary i').html();
-        name            = $(this).attr('name');
+        fullPrice   = $('#price_summary').data('price');
+        promotion   = $('#price_summary').data('promotion');
+        name        = $(this).attr('name');
 
         if (!dostawki[name]) {
             previousPrice   = 0;
@@ -304,9 +308,19 @@ $(document).ready(function()
         dostawki[name]  = price;
         finalPrice      = parseFloat(fullPrice) + parseFloat(price);
 
-        $('#price_summary i').html(finalPrice);
+        $('#price_summary i strike').html(finalPrice);
+        $('#price_summary i span').html(calculatePromotion(finalPrice, promotion));
+        $('#price_summary').data('price', finalPrice);
     });
 });
+
+function calculatePromotion(basePrice, promotion)
+{
+    percent = (promotion / 100) * basePrice;
+    basePrice -= percent;
+
+    return basePrice;
+}
 
 function useValidator()
 {

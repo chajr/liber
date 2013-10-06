@@ -1,8 +1,26 @@
 {;error;}
+{;op;promotion;}
+<div class="promotion_box">
+    <i class="icon-star-empty"></i>
+    Promocja:<br/>
+    {;promotion;}%
+</div>
+{;op_end;promotion;}
 <div id="rooms_prices">
     {;rooms;}
 </div>
-<div id="price_summary">
+<div id             ="price_summary"
+     data-price     ="{;full_base_price;}"
+     data-promotion ="{;promotion;}"
+>
     <span>Cena łącznie:</span>
-    <i>{;full_price;}</i> zł
+    <i>
+        {;op;promotion_decrease_base;}
+        (<strike class="{;promotion;}p">{;full_base_price;}</strike>)
+        {;op_end;promotion_decrease_base;}
+        <span>{;full_price;}</span>
+    </i> zł
+    {;op;promotion_decrease;}
+        - {;promotion;}%
+    {;op_end;promotion_decrease;}
 </div>

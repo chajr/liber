@@ -2,7 +2,7 @@
 /**
  * @author chajr <chajr@bluetree.pl>
  * @package admin
- * @version 0.17.0
+ * @version 0.18.0
  * @copyright chajr/bluetree
  */
 class Libs_Admin_Core
@@ -616,34 +616,56 @@ class Libs_Admin_Core
         $fullReservations   = array();
 
         foreach ($reservations as $reservation) {
+            unset($promotion, $promotionPrice);
+
             $this->_calculateDays($reservation['od'], $reservation['do']);
             $payment  = $this->_isPaymentDone($reservation['uwagi']);
             $priceSum = 0;
 
             if ($reservation['opcje']) {
                 $options = unserialize($reservation['opcje']);
-                foreach ($options as $option) {
-                    if ($option) {
+                foreach ($options as $key => $option) {
+                    if ($option && $key !== 'promotion') {
                         $priceSum += $this->_calculatePriceForRoom($option);
+                    }
+
+                    if ($key === 'promotion') {
+                        $promotion = $option;
                     }
                 }
             }
 
-            $fullReservations[] = array(
-                'id'            => $reservation['id'],
-                'imie'          => $reservation['imie'],
-                'nazwisko'      => $reservation['nazwisko'],
-                'telefon'       => $reservation['telefon'],
-                'ulica'         => $reservation['ulica'],
-                'numer'         => $reservation['numer'],
-                'miasto'        => $reservation['miasto'],
-                'mail'          => $reservation['mail'],
-                'kod'           => $reservation['kod'],
-                'full_price'    => $priceSum * $this->_daysRange,
-                'payment_done'  => $payment['payment_done'],
-                'payment_ico'   => $payment['payment_ico'],
-                'payment'       => $payment['payment'],
+            $finalPrice = $priceSum * $this->_daysRange;
+
+            if (isset($promotion)) {
+                $percent        = $this->_percent($promotion, $finalPrice);
+                $promotionPrice = $finalPrice - $percent;
+            }
+
+            $reservationDetails = array(
+                'id'                => $reservation['id'],
+                'imie'              => $reservation['imie'],
+                'nazwisko'          => $reservation['nazwisko'],
+                'telefon'           => $reservation['telefon'],
+                'ulica'             => $reservation['ulica'],
+                'numer'             => $reservation['numer'],
+                'miasto'            => $reservation['miasto'],
+                'mail'              => $reservation['mail'],
+                'kod'               => $reservation['kod'],
+                'full_base_price'   => $finalPrice,
+                'payment_done'      => $payment['payment_done'],
+                'payment_ico'       => $payment['payment_ico'],
+                'payment'           => $payment['payment'],
             );
+
+            if (isset($promotionPrice)) {
+                $reservationDetails['full_price'] = $promotionPrice;
+                $reservationDetails['promotion']  = $promotion;
+            } else {
+                $reservationDetails['full_price'] = 0;
+                $reservationDetails['promotion']  = 0;
+            }
+            $fullReservations[] = $reservationDetails;
         }
 
         return $fullReservations;
@@ -818,6 +840,10 @@ class Libs_Admin_Core
                 unserialize($room['opcje']), $room['id']
             );
             $this->_calculateDays($room['od'], $room['do']);
+
+            if (is_string($roomOptions)) {
+                continue;
+            }
 
             $price          = $this->_calculatePriceForRoom($roomOptions);
             $roomsDisplay[] = array(

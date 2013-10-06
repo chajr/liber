@@ -148,7 +148,12 @@
                 </address>
                 <div class="full_price">
                     <div>
-                       Łączny koszt za wszystkie pokoje: {;reservation_details;full_price;} zł
+                       Łączny koszt za wszystkie pokoje:
+                        <div>
+                            Cena podstawowa: {;reservation_details;full_base_price;}<br/>
+                            Cena z promocją: {;reservation_details;full_price;}<br/>
+                            Promocja: - {;reservation_details;promotion;}%
+                        </div>
                     </div>
                     <input type="checkbox"
                            class="payment"

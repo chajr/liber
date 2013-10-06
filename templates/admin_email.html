@@ -111,7 +111,16 @@
         </div>
         <hr/>
         <div class="price">
-            Łączna cena za wybrane usługi: <span>{;price_sum;} zł</span>
+            Łączna cena za wybrane usługi:
+            <span>
+                {;op;promotion_decrease_base;}
+                (<strike>{;full_base_price;}</strike>)
+                {;op_end;promotion_decrease_base;}
+                {;price_sum;}
+                {;op;promotion_decrease;}
+                - {;promotion;}%
+                {;op_end;promotion_decrease;}
+            </span>
         </div>
     </body>
 </html>

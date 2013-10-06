@@ -58,6 +58,15 @@
             </tbody>
         </table>
         <br/>
-        Łączna cena: <b>{;final_price;}</b>
+        Łączna cena:
+        <span>
+            {;op;promotion_decrease_base;}
+            (<strike>{;full_base_price;}</strike>)
+            {;op_end;promotion_decrease_base;}
+            <b>{;final_price;}</b>
+            {;op;promotion_decrease;}
+            - {;promotion;}%
+            {;op_end;promotion_decrease;}
+        </span>
     </div>
 </div>

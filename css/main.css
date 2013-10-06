@@ -313,3 +313,17 @@ b{
 .reservation_details table td, .reservation_details table th{
     padding:10px;
 }
+#result_payment div.promotion_box{
+    background-color: #168001;
+    border: 1px dashed  #01FA1E;
+    text-align: center;
+    font-size: 22px;
+    font-weight: bold;
+    color:#fff;
+    position: relative;
+}
+#result_payment div.promotion_box i{
+    font-size:47px;
+    position: absolute;
+    left: 360px;
+}

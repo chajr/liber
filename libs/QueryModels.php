@@ -2,7 +2,7 @@
 /**
  * @author chajr <chajr@bluetree.pl>
  * @package core
- * @version 1.1.0
+ * @version 1.2.0
  * @copyright chajr/bluetree
  */
 class Libs_QueryModels
@@ -136,6 +136,19 @@ class Libs_QueryModels
             WHERE
             id_reservation = '$reservationId'
         ";
+
+        return new Libs_Mysql($query);
+    }
+
+    /**
+     * get promotion for given days count
+     * 
+     * @param integer $days
+     * @return Libs_Mysql
+     */
+    static function getPromotion($days)
+    {
+        $query = "SELECT * FROM promotions WHERE days='$days'";
 
         return new Libs_Mysql($query);
     }
