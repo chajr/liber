@@ -183,3 +183,11 @@ nav{
 .promotion_buttons_block.margin{
     margin-bottom: 50px;
 }
+.payed{
+    padding-top: 20px;
+    text-align: center;
+    display: none;
+}
+.payed.show{
+    display: inline;
+}

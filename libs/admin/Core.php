@@ -2,7 +2,7 @@
 /**
  * @author chajr <chajr@bluetree.pl>
  * @package admin
- * @version 0.18.0
+ * @version 0.19.0
  * @copyright chajr/bluetree
  */
 class Libs_Admin_Core
@@ -583,12 +583,18 @@ class Libs_Admin_Core
                 }
             }
 
+            $paymentClass = '';
+            if ($reservation['uwagi']) {
+                $paymentClass = 'show';
+            }
+
             $fullReservations[] = array(
                 'id'                => $reservation['id'],
                 'term_list'         => rtrim($idS, ', '),
                 'email'             => $reservation['mail'],
                 'from'              => $reservation['od'],
                 'to'                => $reservation['do'],
+                'payed'             => $paymentClass,
                 'class'             => $this->_getRoomClass(
                     $reservation['od'],
                     $reservation['do']

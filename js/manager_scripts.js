@@ -44,13 +44,14 @@ $(document).ready(function()
         }
 
         $.post('?page=set_payment', {value: value, id: id}).done(function(data){
-            console.log(data);
             if (elemenrt.is(':checked') && data === 'ok') {
                 $('#reservation_detail_' + id + ' .modal-content').addClass('payment_done');
                 $('#reservation_detail_' + id + ' .modal-title').append('<i class="icon-check"></i>');
+                $('#reservation_detail_button_' + id).find('.payed').addClass('show');
             } else if(data === 'ok') {
                 $('#reservation_detail_' + id + ' .modal-content').removeClass('payment_done');
                 $('#reservation_detail_' + id + ' .modal-title i').remove();
+                $('#reservation_detail_button_' + id).find('.payed').removeClass('show');
             } else {
                 alert('Coś poszło nie tak, spróbuj jeszcze raz');
             }

@@ -38,15 +38,18 @@
                 <td>
                     {;reservations;email;}
                 </td>
-                <td>
+                <td id="reservation_detail_button_{;reservations;id;}">
                     <button type="button"
                             class="btn btn-default"
                             data-toggle="modal"
                             href="#reservation_detail_{;reservations;id;}"
-                            >
+                    >
                         <i class="icon-list"></i>
                         Szczegóły rezerwacji
                     </button>
+                    <span class="payed {;reservations;payed;}">
+                        Zapłacono <i class="icon-check"></i>
+                    </span>
                 </td>
                 <td>
                     {;reservations;from;}
