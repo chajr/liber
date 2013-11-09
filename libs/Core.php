@@ -2,7 +2,7 @@
 /**
  * @author chajr <chajr@bluetree.pl>
  * @package core
- * @version 1.2.0
+ * @version 1.3.0
  * @copyright chajr/bluetree
  */
 class Libs_Core
@@ -678,9 +678,11 @@ class Libs_Core
         $calendar       = new Libs_Render('calendar');
         $steps          = new Libs_Render('index');
 
+        $breadcrumbs = $breadcrumbs->render();
+        $header->generate('breadcrumbs', $breadcrumbs);
+
         $stream = '';
         $stream .= $header->render();
-        $stream .= $breadcrumbs->render();
         $stream .= $calendar->render();
         $stream .= $steps->render();
         $stream .= $footer->render();
@@ -744,9 +746,11 @@ class Libs_Core
         $roomsList  = Libs_QueryModels::getRooms();
         foreach ($roomsList->result(1) as $room) {
             if (in_array($room['id'], $this->_lockedRooms)) {
-                $room['locked'] = 'lock';
+                $room['locked']     = 'lock';
+                $room['disabled']   = 'disabled="disabled"';
             } else {
-                $room['locked'] = 'unlock';
+                $room['locked']     = 'unlock';
+                $room['disabled']   = '';
             }
             $room['space_option'] = $this->_createSpaceList($room['space']);
             $rooms[] = $room;

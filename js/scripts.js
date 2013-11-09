@@ -1,7 +1,7 @@
 /**
  * @author chajr <chajr@bluetree.pl>
  * @package core
- * @version 1.2.0
+ * @version 1.3.0
  * @copyright chajr/bluetree
  */
 var validatorErrorList = new Array();
@@ -77,9 +77,9 @@ $(document).ready(function()
                                 $('#result_rooms')          .html(data);
                                 $('#result_rooms')          .show();
                                 $('#splash_screen')         .hide();
-                                $('#breadcrumbs li:eq(0)')  .removeClass('selected');
+                                $('#breadcrumbs li:eq(0)')  .removeClass('active');
                                 $('#breadcrumbs li:eq(0)')  .addClass('visited');
-                                $('#breadcrumbs li:eq(1)')  .addClass('selected');
+                                $('#breadcrumbs li:eq(1)')  .addClass('active');
                                 $('#calendar')              .hide();
                                 $('#steps .previous')       .removeClass('disabled');
                                 step++;
@@ -112,9 +112,9 @@ $(document).ready(function()
                             $('#result_payment')        .html(data);
                             $('#result_payment')        .show();
                             $('#splash_screen')         .hide();
-                            $('#breadcrumbs li:eq(1)')  .removeClass('selected');
+                            $('#breadcrumbs li:eq(1)')  .removeClass('active');
                             $('#breadcrumbs li:eq(1)')  .addClass('visited');
-                            $('#breadcrumbs li:eq(2)')  .addClass('selected');
+                            $('#breadcrumbs li:eq(2)')  .addClass('active');
                             $('#result_rooms')          .hide();
                             step++;
                         }
@@ -149,9 +149,9 @@ $(document).ready(function()
                         $('#result_contact')        .html(data);
                         $('#result_contact')        .show();
                         $('#splash_screen')         .hide();
-                        $('#breadcrumbs li:eq(2)')  .removeClass('selected');
+                        $('#breadcrumbs li:eq(2)')  .removeClass('active');
                         $('#breadcrumbs li:eq(2)')  .addClass('visited');
-                        $('#breadcrumbs li:eq(3)')  .addClass('selected');
+                        $('#breadcrumbs li:eq(3)')  .addClass('active');
                         $('#result_payment')        .hide();
                         step++;
 
@@ -186,9 +186,9 @@ $(document).ready(function()
                             $('#result_end')            .html(data);
                             $('#result_end')            .show();
                             $('#splash_screen')         .hide();
-                            $('#breadcrumbs li:eq(3)')  .removeClass('selected');
+                            $('#breadcrumbs li:eq(3)')  .removeClass('active');
                             $('#breadcrumbs li:eq(3)')  .addClass('visited');
-                            $('#breadcrumbs li:eq(4)')  .addClass('selected');
+                            $('#breadcrumbs li:eq(4)')  .addClass('active');
                             $('#result_contact')        .hide();
                             $('#steps')        .hide();
                             step++;
@@ -210,9 +210,9 @@ $(document).ready(function()
 
             switch (step) {
                 case 1:
-                    $('#breadcrumbs li:eq(0)')  .addClass('selected');
+                    $('#breadcrumbs li:eq(0)')  .addClass('active');
                     $('#breadcrumbs li:eq(0)')  .removeClass('visited');
-                    $('#breadcrumbs li:eq(1)')  .removeClass('selected');
+                    $('#breadcrumbs li:eq(1)')  .removeClass('active');
                     $('#calendar')              .show();
                     $('#result_rooms')          .hide();
                     $('#splash_screen')         .hide();
@@ -224,17 +224,17 @@ $(document).ready(function()
                 case 2:
                     $('#result_payment')        .hide();
                     $('#splash_screen')         .hide();
-                    $('#breadcrumbs li:eq(1)')  .addClass('selected');
+                    $('#breadcrumbs li:eq(1)')  .addClass('active');
                     $('#breadcrumbs li:eq(1)')  .removeClass('visited');
-                    $('#breadcrumbs li:eq(2)')  .removeClass('selected');
+                    $('#breadcrumbs li:eq(2)')  .removeClass('active');
                     $('#result_rooms')          .show();
                     step--;
                     break;
 
                 case 3:
-                    $('#breadcrumbs li:eq(2)')  .addClass('selected');
+                    $('#breadcrumbs li:eq(2)')  .addClass('active');
                     $('#breadcrumbs li:eq(2)')  .removeClass('visited');
-                    $('#breadcrumbs li:eq(3)')  .removeClass('selected');
+                    $('#breadcrumbs li:eq(3)')  .removeClass('active');
                     $('#result_contact')        .hide();
                     $('#result_payment')        .show();
                     $('#splash_screen').hide();
