@@ -4,7 +4,8 @@
  * @version 1.3.0
  * @copyright chajr/bluetree
  */
-var validatorErrorList = new Array();
+var validatorErrorList  = new Array();
+var validList           = false;
 
 $(document).ready(function()
 {
@@ -171,6 +172,7 @@ $(document).ready(function()
                     && validatorErrorList['regulamin']  != false
                     && validatorErrorList['telefon']    != false
                     && validatorErrorList['ulica']      != false
+                    && validList                        != false
                 ) {
                     $.post('',
                         {
@@ -339,6 +341,7 @@ function useValidator()
             {
                 var element             = jQuery(this).parent();
                 id                      = jQuery(this).attr('id');
+                validList               = true;
                 validatorErrorList[id]  = true;
                 element.find('.icon-ok').show();
                 element.find('.icon-error').hide();
